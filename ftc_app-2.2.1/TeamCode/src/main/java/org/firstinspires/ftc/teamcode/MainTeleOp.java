@@ -94,8 +94,7 @@ public class MainTeleOp extends OpMode {
         // You have to reverse one motor, otherwise a power value of 1.0 would make the motors run
         // in different directions. This just makes it more convenient, so you don't have to use 1.0
         // for one motor and -1.0 for the other motor.
-        leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
+        rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }
 
@@ -151,11 +150,8 @@ public class MainTeleOp extends OpMode {
          */
         // Center wheels
         double centerPower;
-        if (gamepad1.right_trigger>0.0 && gamepad1.left_trigger==0.0) {
+        if (gamepad1.right_trigger>0.0) {
             centerPower=gamepad1.right_trigger;
-        }
-        else if (gamepad1.left_trigger>0.0 && gamepad1.right_trigger==0.0) {
-            centerPower=-gamepad1.left_trigger;
         }
         else {
             centerPower=MOTOR_POWER_OFF;

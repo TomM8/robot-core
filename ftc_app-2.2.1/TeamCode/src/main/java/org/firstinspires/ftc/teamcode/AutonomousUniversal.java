@@ -74,7 +74,8 @@ public class AutonomousUniversal extends LinearOpMode {
         runtime.reset();
 
         // Run the robot
-        driveF(DRIVE_POWER,1237);
+        // action(DRIVE_POWER, time msec)
+    driveF(DRIVE_POWER,520);
         turnRight(DRIVE_POWER,130);
         driveF(DRIVE_POWER,1237);
         turnRight(DRIVE_POWER,130);
