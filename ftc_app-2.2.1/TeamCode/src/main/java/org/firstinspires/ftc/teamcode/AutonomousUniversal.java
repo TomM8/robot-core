@@ -35,6 +35,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -60,6 +61,7 @@ public class AutonomousUniversal extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     DcMotor leftMotor;
     DcMotor rightMotor;
+    ColorSensor colorSensor;
     static final double DRIVE_POWER = 1.0;
 
     @Override
@@ -68,19 +70,20 @@ public class AutonomousUniversal extends LinearOpMode {
         telemetry.update();
         leftMotor = hardwareMap.dcMotor.get("left motor");
         rightMotor = hardwareMap.dcMotor.get("right motor");
-        leftMotor.setDirection(DcMotor.Direction.REVERSE); // TODO: idk which one to reverse
+        rightMotor.setDirection(DcMotor.Direction.REVERSE);
+        colorSensor.enableLed(true);
 
         waitForStart();
         runtime.reset();
 
         // Run the robot
         // action(DRIVE_POWER, time msec)
-    driveF(DRIVE_POWER,520);
+        driveF(DRIVE_POWER,520);
         turnRight(DRIVE_POWER,130);
         driveF(DRIVE_POWER,1237);
         turnRight(DRIVE_POWER,130);
         driveF(DRIVE_POWER,1113);
-        // TODO: press
+        // TODO: press button
         driveR(DRIVE_POWER,1113);
         turnLeft(DRIVE_POWER,888);
         driveF(DRIVE_POWER,1484);
@@ -88,7 +91,18 @@ public class AutonomousUniversal extends LinearOpMode {
         driveF(DRIVE_POWER,1484);
         turnRight(DRIVE_POWER,888);
         driveF(DRIVE_POWER,1113);
-        // TODO: press
+        // TODO: press button
+
+        /*
+        To get the color from color sensor, you can assign a variable:
+        float[] perceivedColor = getColorRGB();
+
+        Then you would update it, maybe using a while loop, like this:
+        perceivedColor = getColorRGB();
+
+        You can also use it with condition checking:
+        if (getColorRGB()[0]>200) { do something }
+         */
     }
 
     public void driveF(double power, int time) throws InterruptedException {
@@ -115,4 +129,8 @@ public class AutonomousUniversal extends LinearOpMode {
         rightMotor.setPower(0.0);
     }
 
+    // Elements of array are Red,Green,Blue - in that order
+    public float[] getColorRGB() {
+        return new float[]{colorSensor.red(),colorSensor.green(),colorSensor.blue()};
+    }
 }
