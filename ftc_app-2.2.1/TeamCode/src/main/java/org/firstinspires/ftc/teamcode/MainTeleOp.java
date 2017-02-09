@@ -150,8 +150,11 @@ public class MainTeleOp extends OpMode {
          */
         // Center wheels
         double centerPower;
-        if (gamepad1.right_trigger>0.0) {
+        if (gamepad1.right_trigger>0.0 && gamepad1.left_trigger==0.0) {
             centerPower=gamepad1.right_trigger;
+        }
+        else if (gamepad1.left_trigger>0.0 && gamepad1.right_trigger==0.0) {
+            centerPower=gamepad1.left_trigger;
         }
         else {
             centerPower=MOTOR_POWER_OFF;

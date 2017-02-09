@@ -32,12 +32,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -54,8 +52,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 
-@Autonomous(name="AutonomousUniversal NextToRed", group="AutonomousUniversal")
-public class AutonomousUniversal extends LinearOpMode {
+@Autonomous(name="AutonomousUniversal FarFromBlue", group="AutonomousUniversal")
+public class AutonomousUniversal4 extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -78,21 +76,11 @@ public class AutonomousUniversal extends LinearOpMode {
 
         // Run the robot
         // action(DRIVE_POWER, time msec)
-        driveF(DRIVE_POWER,440);
+        driveF(DRIVE_POWER,420);
         turnRight(DRIVE_POWER,1000);
-        driveF(DRIVE_POWER,650);
-        turnLeft(DRIVE_POWER,1800);
-        driveF(DRIVE_POWER,1100);
-        turnRight(DRIVE_POWER,300);
-        driveF(DRIVE_POWER,1450);
-        turnLeft(DRIVE_POWER,1600);
-
-
-        //driveR(DRIVE_POWER,500);
-        //turnLeft(DRIVE_POWER,800);
-        //driveF(DRIVE_POWER,1300);
-        //turnLeft(DRIVE_POWER,900);
-        //driveF(DRIVE_POWER,1000);
+        driveF(DRIVE_POWER,760);
+        turnLeft(DRIVE_POWER,1000);
+        driveF(DRIVE_POWER,2500);
         // TODO: press button
 
         // TODO: press button
@@ -121,14 +109,12 @@ public class AutonomousUniversal extends LinearOpMode {
     }
 
     public void turnLeft(double power, int time) throws InterruptedException {
-        rightMotor.setPower(-power);
-        leftMotor.setPower(power);
-        Thread.sleep(time);
-    }
-    public void turnRight(double power, int time) throws InterruptedException {
         rightMotor.setPower(power);
         leftMotor.setPower(-power);
         Thread.sleep(time);
+    }
+    public void turnRight(double power, int time) throws InterruptedException {
+        turnLeft(-power,time);
     }
     public void stopDriving() {
         leftMotor.setPower(0.0);
