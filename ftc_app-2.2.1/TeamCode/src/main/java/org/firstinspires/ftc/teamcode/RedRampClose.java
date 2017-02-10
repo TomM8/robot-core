@@ -84,12 +84,12 @@ public class RedRampClose extends LinearOpMode {
 
         // Run the robot
         // action(DRIVE_POWER, time sec)
-        driveF(DRIVE_POWER,1.85);
+        driveF(DRIVE_POWER,1.55);
         turnLeft(DRIVE_POWER,1.75);
-        driveF(DRIVE_POWER,1.75);
+        driveF(DRIVE_POWER,1.55);
         turnLeft(DRIVE_POWER,2.75);
         driveF(DRIVE_LESS_POWER,0.7);
-        extendArm(DRIVE_POWER,0.9);
+        extendArm(DRIVE_POWER,3.0);
         // TODO: press button
         if (colorSensor.red() > colorSensor.blue()) {
             highMotor.setPower(1.0);
