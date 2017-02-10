@@ -59,8 +59,10 @@ public class BlueRampFar extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     DcMotor leftMotor;
     DcMotor rightMotor;
+    DcMotor highMotor;
     ColorSensor colorSensor;
     static final double DRIVE_POWER = 1.0;
+    static final double DRIVE_LESS_POWER = 0.5;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -68,11 +70,12 @@ public class BlueRampFar extends LinearOpMode {
         telemetry.update();
         leftMotor = hardwareMap.dcMotor.get("left motor");
         rightMotor = hardwareMap.dcMotor.get("right motor");
+        highMotor = hardwareMap.dcMotor.get("highMotor");
+        colorSensor = hardwareMap.colorSensor.get("colorSensor");
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
         //colorSensor.enableLed(true);
 
         waitForStart();
-        runtime.reset();
 
         // Run the robot
         // action(DRIVE_POWER, time msec)
@@ -97,25 +100,47 @@ public class BlueRampFar extends LinearOpMode {
          */
     }
 
-    public void driveF(double power, int time) throws InterruptedException {
-        leftMotor.setPower(-power);
-        rightMotor.setPower(-power);
-        Thread.sleep(time);
-    }
-    public void driveR(double power, int time) throws InterruptedException {
+    public void driveF(double power, double time) {
         leftMotor.setPower(power);
         rightMotor.setPower(power);
-        Thread.sleep(time);
+        runtime.reset();
+        while (runtime.seconds() < time);
+        leftMotor.setPower(0.0);
+        rightMotor.setPower(0.0);
+        waitSec(0.3);
     }
 
-    public void turnLeft(double power, int time) throws InterruptedException {
+    public void driveR(double power, double time) {
+        leftMotor.setPower(-power);
+        rightMotor.setPower(-power);
+        runtime.reset();
+        while (runtime.seconds() < time);
+        leftMotor.setPower(0.0);
+        rightMotor.setPower(0.0);
+        waitSec(0.3);
+    }
+
+    public void turnLeft(double power, double time) {
         rightMotor.setPower(power);
         leftMotor.setPower(-power);
-        Thread.sleep(time);
+        runtime.reset();
+        while (runtime.seconds() < time);
+        leftMotor.setPower(0.0);
+        rightMotor.setPower(0.0);
+        waitSec(0.3);
+
     }
-    public void turnRight(double power, int time) throws InterruptedException {
-        turnLeft(-power,time);
+
+    public void turnRight(double power, double time) {
+        rightMotor.setPower(-power);
+        leftMotor.setPower(power);
+        runtime.reset();
+        while (runtime.seconds() < time);
+        leftMotor.setPower(0.0);
+        rightMotor.setPower(0.0);
+        waitSec(0.3);
     }
+
     public void stopDriving() {
         leftMotor.setPower(0.0);
         rightMotor.setPower(0.0);
@@ -124,5 +149,11 @@ public class BlueRampFar extends LinearOpMode {
     // Elements of array are Red,Green,Blue - in that order
     public float[] getColorRGB() {
         return new float[]{colorSensor.red(),colorSensor.green(),colorSensor.blue()};
+    }
+    public void waitSec(double length) {
+        runtime.reset();
+        while (runtime.seconds() < length);
+
+
     }
 }

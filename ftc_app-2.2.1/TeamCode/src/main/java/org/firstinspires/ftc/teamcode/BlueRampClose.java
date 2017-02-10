@@ -52,7 +52,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 
-@Autonomous(name="BlueRampFar", group="Autonomous Blue")
+@Autonomous(name="BlueRampClose", group="Autonomous Blue")
 public class BlueRampClose extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -60,6 +60,7 @@ public class BlueRampClose extends LinearOpMode {
     DcMotor leftMotor;
     DcMotor rightMotor;
     ColorSensor colorSensor;
+    DcMotor highMotor;
     static final double DRIVE_POWER = 1.0;
 
     @Override
@@ -68,22 +69,19 @@ public class BlueRampClose extends LinearOpMode {
         telemetry.update();
         leftMotor = hardwareMap.dcMotor.get("left motor");
         rightMotor = hardwareMap.dcMotor.get("right motor");
+        highMotor = hardwareMap.dcMotor.get("highMotor");
+        colorSensor = hardwareMap.colorSensor.get("colorSensor");
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
         //colorSensor.enableLed(true);
 
         waitForStart();
-        runtime.reset();
 
         // Run the robot
         // action(DRIVE_POWER, time msec)
-        driveF(DRIVE_POWER,440);
-        turnLeft(DRIVE_POWER,1000);
-        driveF(DRIVE_POWER,650);
-        turnRight(DRIVE_POWER,1800);
-        driveF(DRIVE_POWER,1100);
-        turnLeft(DRIVE_POWER,300);
-        driveF(DRIVE_POWER,1450);
-        turnRight(DRIVE_POWER,1600);
+        driveF(DRIVE_POWER,1.85);
+        turnRight(DRIVE_POWER,1.75);
+        driveF(DRIVE_POWER,1.75);
+        turnRight(DRIVE_POWER,2.05);
         // TODO: press button
 
         // TODO: press button
@@ -100,25 +98,48 @@ public class BlueRampClose extends LinearOpMode {
          */
     }
 
-    public void driveF(double power, int time) throws InterruptedException {
-        leftMotor.setPower(-power);
-        rightMotor.setPower(-power);
-        Thread.sleep(time);
-    }
-    public void driveR(double power, int time) throws InterruptedException {
+
+    public void driveF(double power, double time) {
         leftMotor.setPower(power);
         rightMotor.setPower(power);
-        Thread.sleep(time);
+        runtime.reset();
+        while (runtime.seconds() < time);
+        leftMotor.setPower(0.0);
+        rightMotor.setPower(0.0);
+        waitSec(0.3);
     }
 
-    public void turnLeft(double power, int time) throws InterruptedException {
+    public void driveR(double power, double time) {
+        leftMotor.setPower(-power);
+        rightMotor.setPower(-power);
+        runtime.reset();
+        while (runtime.seconds() < time);
+        leftMotor.setPower(0.0);
+        rightMotor.setPower(0.0);
+        waitSec(0.3);
+    }
+
+    public void turnLeft(double power, double time) {
         rightMotor.setPower(power);
         leftMotor.setPower(-power);
-        Thread.sleep(time);
+        runtime.reset();
+        while (runtime.seconds() < time);
+        leftMotor.setPower(0.0);
+        rightMotor.setPower(0.0);
+        waitSec(0.3);
+
     }
-    public void turnRight(double power, int time) throws InterruptedException {
-        turnLeft(-power,time);
+
+    public void turnRight(double power, double time) {
+        rightMotor.setPower(-power);
+        leftMotor.setPower(power);
+        runtime.reset();
+        while (runtime.seconds() < time);
+        leftMotor.setPower(0.0);
+        rightMotor.setPower(0.0);
+        waitSec(0.3);
     }
+
     public void stopDriving() {
         leftMotor.setPower(0.0);
         rightMotor.setPower(0.0);
@@ -127,5 +148,11 @@ public class BlueRampClose extends LinearOpMode {
     // Elements of array are Red,Green,Blue - in that order
     public float[] getColorRGB() {
         return new float[]{colorSensor.red(),colorSensor.green(),colorSensor.blue()};
+    }
+    public void waitSec(double length) {
+        runtime.reset();
+        while (runtime.seconds() < length);
+
+
     }
 }

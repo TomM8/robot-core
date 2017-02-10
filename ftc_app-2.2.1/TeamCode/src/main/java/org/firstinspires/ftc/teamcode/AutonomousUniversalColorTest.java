@@ -63,7 +63,7 @@ public class AutonomousUniversalColorTest extends LinearOpMode {
     DcMotor highMotor;
     DcMotor centerMotor;
     static final double DRIVE_POWER = 1.0;
-
+    final double MOVE_TIME = 1;
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry.addData("Status", "Initialized");
@@ -73,28 +73,30 @@ public class AutonomousUniversalColorTest extends LinearOpMode {
         highMotor = hardwareMap.dcMotor.get("highMotor");
         centerMotor = hardwareMap.dcMotor.get("center motor");
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
-        colorSensor = hardwareMap.colorSensor.get("color");
-        colorSensor.enableLed(true);
+        colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        colorSensor.enableLed(false);
 
         waitForStart();
         runtime.reset();
 
+            if (colorSensor.red() > colorSensor.blue()) {
+                highMotor.setPower(1);
+                while (runtime.seconds() < MOVE_TIME) ;
+                highMotor.setPower(0);
+
+            }
+            else {
+                double tracker = System.currentTimeMillis()+10000;
+                while (System.currentTimeMillis() < tracker) {
+                    centerMotor.setPower(1.0);
+                }
+
+            }
+
         // Run the robot
         // action(DRIVE_POWER, time msec)
         // TODO: press button
-        if (getColorRGB()[0]>200) {
-            double tracker = System.currentTimeMillis()+500;
-            while (System.currentTimeMillis() < tracker) {
-                highMotor.setPower(1.0);
-            }
-        }
-        else {
-            double tracker = System.currentTimeMillis()+550;
-            while (System.currentTimeMillis() < tracker) {
-                centerMotor.setPower(1.0);
-            }
 
-        }
 
         // TODO: press button
 
@@ -110,27 +112,47 @@ public class AutonomousUniversalColorTest extends LinearOpMode {
          */
     }
 
-    public void driveF(double power, int time) throws InterruptedException {
-        leftMotor.setPower(-power);
-        rightMotor.setPower(-power);
-        Thread.sleep(time);
-    }
-    public void driveR(double power, int time) throws InterruptedException {
+    public void driveF(double power, double time) {
         leftMotor.setPower(power);
         rightMotor.setPower(power);
-        Thread.sleep(time);
+        runtime.reset();
+        while (runtime.seconds() < time);
+        leftMotor.setPower(0.0);
+        rightMotor.setPower(0.0);
+        waitSec(0.3);
     }
 
-    public void turnLeft(double power, int time) throws InterruptedException {
+    public void driveR(double power, double time) {
+        leftMotor.setPower(-power);
         rightMotor.setPower(-power);
-        leftMotor.setPower(power);
-        Thread.sleep(time);
+        runtime.reset();
+        while (runtime.seconds() < time);
+        leftMotor.setPower(0.0);
+        rightMotor.setPower(0.0);
+        waitSec(0.3);
     }
-    public void turnRight(double power, int time) throws InterruptedException {
+
+    public void turnLeft(double power, double time) {
         rightMotor.setPower(power);
         leftMotor.setPower(-power);
-        Thread.sleep(time);
+        runtime.reset();
+        while (runtime.seconds() < time);
+        leftMotor.setPower(0.0);
+        rightMotor.setPower(0.0);
+        waitSec(0.3);
+
     }
+
+    public void turnRight(double power, double time) {
+        rightMotor.setPower(-power);
+        leftMotor.setPower(power);
+        runtime.reset();
+        while (runtime.seconds() < time);
+        leftMotor.setPower(0.0);
+        rightMotor.setPower(0.0);
+        waitSec(0.3);
+    }
+
     public void stopDriving() {
         leftMotor.setPower(0.0);
         rightMotor.setPower(0.0);
@@ -139,5 +161,11 @@ public class AutonomousUniversalColorTest extends LinearOpMode {
     // Elements of array are Red,Green,Blue - in that order
     public float[] getColorRGB() {
         return new float[]{colorSensor.red(),colorSensor.green(),colorSensor.blue()};
+    }
+    public void waitSec(double length) {
+        runtime.reset();
+        while (runtime.seconds() < length);
+
+
     }
 }

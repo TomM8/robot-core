@@ -39,6 +39,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -64,6 +65,8 @@ public class RedRampClose extends LinearOpMode {
     ColorSensor colorSensor;
     DcMotor highMotor;
     static final double DRIVE_POWER = 1.0;
+    static final double DRIVE_LESS_POWER = 0.3;
+    final double MOVE_TIME = 1.0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -72,41 +75,39 @@ public class RedRampClose extends LinearOpMode {
         leftMotor = hardwareMap.dcMotor.get("left motor");
         rightMotor = hardwareMap.dcMotor.get("right motor");
         highMotor = hardwareMap.dcMotor.get("highMotor");
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);
-        colorSensor.enableLed(true);
+        colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        rightMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftMotor.setDirection(DcMotor.Direction.REVERSE);
+        colorSensor.enableLed(false);
 
         waitForStart();
-        runtime.reset();
 
         // Run the robot
-        // action(DRIVE_POWER, time msec)
-        driveF(DRIVE_POWER,440);
-        turnRight(DRIVE_POWER,1000);
-        driveF(DRIVE_POWER,650);
-        turnLeft(DRIVE_POWER,1800);
-        driveF(DRIVE_POWER,1100);
-        turnRight(DRIVE_POWER,300);
-        driveF(DRIVE_POWER,1450);
-        turnLeft(DRIVE_POWER,1350);
-        driveF(DRIVE_POWER,600);
-        turnLeft(DRIVE_POWER,1450);
+        // action(DRIVE_POWER, time sec)
+        driveF(DRIVE_POWER,1.85);
+        turnLeft(DRIVE_POWER,1.75);
+        driveF(DRIVE_POWER,1.75);
+        turnLeft(DRIVE_POWER,2.75);
+        driveF(DRIVE_LESS_POWER,0.7);
+        extendArm(DRIVE_POWER,0.9);
         // TODO: press button
-        if (getColorRGB()[0]>200) {
-            double tracker = System.currentTimeMillis()+500;
-            while (System.currentTimeMillis() < tracker) {
-                highMotor.setPower(1.0);
+        if (colorSensor.red() > colorSensor.blue()) {
+            highMotor.setPower(1.0);
+            while (runtime.seconds() < MOVE_TIME && opModeIsActive()) ;
+            highMotor.setPower(0);
             }
-        }
         else {
             double tracker = System.currentTimeMillis()+550;
-            while (System.currentTimeMillis() < tracker) {
+            while (System.currentTimeMillis() < tracker && opModeIsActive()) {
                 leftMotor.setPower(1.0);
                 rightMotor.setPower(1.0);
             }
-            while (System.currentTimeMillis() < tracker) {
+            while (System.currentTimeMillis() < tracker && opModeIsActive()) {
                 highMotor.setPower(1.0);
             }
+           }
         }
+
 
         // TODO: press button
 
@@ -120,36 +121,63 @@ public class RedRampClose extends LinearOpMode {
         You can also use it with condition checking:
         if (getColorRGB()[0]>200) { do something }
          */
-    }
 
-    public void driveF(double power, int time) throws InterruptedException {
-        leftMotor.setPower(-power);
-        rightMotor.setPower(-power);
-        Thread.sleep(time);
-    }
-    public void driveR(double power, int time) throws InterruptedException {
+    public void driveF(double power, double time) {
         leftMotor.setPower(power);
         rightMotor.setPower(power);
-        Thread.sleep(time);
+        runtime.reset();
+        while (runtime.seconds() < time && opModeIsActive());
+        leftMotor.setPower(0.0);
+        rightMotor.setPower(0.0);
+        waitSec(0.3);
     }
 
-    public void turnLeft(double power, int time) throws InterruptedException {
+    public void driveR(double power, double time) {
+        leftMotor.setPower(-power);
         rightMotor.setPower(-power);
-        leftMotor.setPower(power);
-        Thread.sleep(time);
+        runtime.reset();
+        while (runtime.seconds() < time && opModeIsActive());
+        leftMotor.setPower(0.0);
+        rightMotor.setPower(0.0);
+        waitSec(0.3);
     }
-    public void turnRight(double power, int time) throws InterruptedException {
+
+    public void turnLeft(double power, double time) {
         rightMotor.setPower(power);
         leftMotor.setPower(-power);
-        Thread.sleep(time);
+        runtime.reset();
+        while (runtime.seconds() < time && opModeIsActive());
+        leftMotor.setPower(0.0);
+        rightMotor.setPower(0.0);
+        waitSec(0.3);
+
     }
+
+    public void turnRight(double power, double time) {
+        rightMotor.setPower(-power);
+        leftMotor.setPower(power);
+        runtime.reset();
+        while (runtime.seconds() < time && opModeIsActive());
+        leftMotor.setPower(0.0);
+        rightMotor.setPower(0.0);
+        waitSec(0.3);
+    }
+
     public void stopDriving() {
         leftMotor.setPower(0.0);
         rightMotor.setPower(0.0);
     }
 
-    // Elements of array are Red,Green,Blue - in that order
-    public float[] getColorRGB() {
-        return new float[]{colorSensor.red(),colorSensor.green(),colorSensor.blue()};
+    public void extendArm(double power, double time) {
+        highMotor.setPower(1.0);
+    }
+
+    public void shortenArm(double power, double time) {
+        highMotor.setPower(-1.0);
+    }
+
+    public void waitSec(double length) {
+        runtime.reset();
+        while (runtime.seconds() < length && opModeIsActive());
     }
 }
