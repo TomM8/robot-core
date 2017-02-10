@@ -89,7 +89,7 @@ public class RedRampClose extends LinearOpMode {
         driveF(DRIVE_POWER,1.55);
         turnLeft(DRIVE_POWER,2.75);
         driveF(DRIVE_LESS_POWER,0.7);
-        extendArm(DRIVE_POWER,3.0);
+        extendArm(DRIVE_POWER,2.0);
         // TODO: press button
         if (colorSensor.red() > colorSensor.blue()) {
             highMotor.setPower(1.0);
@@ -125,8 +125,7 @@ public class RedRampClose extends LinearOpMode {
     public void driveF(double power, double time) {
         leftMotor.setPower(power);
         rightMotor.setPower(power);
-        runtime.reset();
-        while (runtime.seconds() < time && opModeIsActive());
+        waitSec(time);
         leftMotor.setPower(0.0);
         rightMotor.setPower(0.0);
         waitSec(0.3);
@@ -135,8 +134,7 @@ public class RedRampClose extends LinearOpMode {
     public void driveR(double power, double time) {
         leftMotor.setPower(-power);
         rightMotor.setPower(-power);
-        runtime.reset();
-        while (runtime.seconds() < time && opModeIsActive());
+        waitSec(time);
         leftMotor.setPower(0.0);
         rightMotor.setPower(0.0);
         waitSec(0.3);
@@ -145,8 +143,7 @@ public class RedRampClose extends LinearOpMode {
     public void turnLeft(double power, double time) {
         rightMotor.setPower(power);
         leftMotor.setPower(-power);
-        runtime.reset();
-        while (runtime.seconds() < time && opModeIsActive());
+        waitSec(time);
         leftMotor.setPower(0.0);
         rightMotor.setPower(0.0);
         waitSec(0.3);
@@ -156,8 +153,7 @@ public class RedRampClose extends LinearOpMode {
     public void turnRight(double power, double time) {
         rightMotor.setPower(-power);
         leftMotor.setPower(power);
-        runtime.reset();
-        while (runtime.seconds() < time && opModeIsActive());
+        waitSec(time);
         leftMotor.setPower(0.0);
         rightMotor.setPower(0.0);
         waitSec(0.3);
@@ -170,6 +166,8 @@ public class RedRampClose extends LinearOpMode {
 
     public void extendArm(double power, double time) {
         highMotor.setPower(1.0);
+        waitSec(time);
+        highMotor.setPower(0.0);
     }
 
     public void shortenArm(double power, double time) {
