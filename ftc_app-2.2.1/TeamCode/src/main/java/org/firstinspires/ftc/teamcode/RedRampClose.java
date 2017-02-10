@@ -84,12 +84,11 @@ public class RedRampClose extends LinearOpMode {
 
         // Run the robot
         // action(DRIVE_POWER, time sec)
-        driveF(DRIVE_POWER,1.55);
+        driveF(DRIVE_POWER,1.65);
         turnLeft(DRIVE_POWER,1.75);
-        driveF(DRIVE_POWER,1.55);
-        turnLeft(DRIVE_POWER,2.75);
+        driveF(DRIVE_POWER,1.65);
+        turnLeftArc(2.85); // todo: this time value may not be correct
         driveF(DRIVE_LESS_POWER,0.7);
-        extendArm(DRIVE_POWER,2.0);
         // TODO: press button
         if (colorSensor.red() > colorSensor.blue()) {
             highMotor.setPower(1.0);
@@ -108,9 +107,6 @@ public class RedRampClose extends LinearOpMode {
            }
         }
 
-
-        // TODO: press button
-
         /*
         To get the color from color sensor, you can assign a variable:
         float[] perceivedColor = getColorRGB();
@@ -126,8 +122,7 @@ public class RedRampClose extends LinearOpMode {
         leftMotor.setPower(power);
         rightMotor.setPower(power);
         waitSec(time);
-        leftMotor.setPower(0.0);
-        rightMotor.setPower(0.0);
+        stopDriving();
         waitSec(0.3);
     }
 
@@ -135,8 +130,7 @@ public class RedRampClose extends LinearOpMode {
         leftMotor.setPower(-power);
         rightMotor.setPower(-power);
         waitSec(time);
-        leftMotor.setPower(0.0);
-        rightMotor.setPower(0.0);
+        stopDriving();
         waitSec(0.3);
     }
 
@@ -144,18 +138,23 @@ public class RedRampClose extends LinearOpMode {
         rightMotor.setPower(power);
         leftMotor.setPower(-power);
         waitSec(time);
-        leftMotor.setPower(0.0);
-        rightMotor.setPower(0.0);
+        stopDriving();
         waitSec(0.3);
 
+    }
+
+    public void turnLeftArc(double time) {
+        rightMotor.setPower(1.0);
+        leftMotor.setPower(0.2);
+        waitSec(time);
+        stopDriving();
     }
 
     public void turnRight(double power, double time) {
         rightMotor.setPower(-power);
         leftMotor.setPower(power);
         waitSec(time);
-        leftMotor.setPower(0.0);
-        rightMotor.setPower(0.0);
+        stopDriving();
         waitSec(0.3);
     }
 
@@ -165,13 +164,15 @@ public class RedRampClose extends LinearOpMode {
     }
 
     public void extendArm(double power, double time) {
-        highMotor.setPower(1.0);
+        highMotor.setPower(-0.5);
         waitSec(time);
         highMotor.setPower(0.0);
     }
 
     public void shortenArm(double power, double time) {
-        highMotor.setPower(-1.0);
+        highMotor.setPower(0.5);
+        waitSec(time);
+        highMotor.setPower(0.0);
     }
 
     public void waitSec(double length) {
