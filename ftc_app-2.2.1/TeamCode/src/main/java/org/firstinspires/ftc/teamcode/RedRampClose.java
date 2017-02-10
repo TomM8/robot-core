@@ -32,10 +32,12 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -52,14 +54,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 
-@Autonomous(name="AutonomousUniversal FarFromBlue", group="AutonomousUniversal")
-public class AutonomousUniversal4 extends LinearOpMode {
+@Autonomous(name="RedRampClose", group="Autonomous Red")
+public class RedRampClose extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
     DcMotor leftMotor;
     DcMotor rightMotor;
     ColorSensor colorSensor;
+    DcMotor highMotor;
     static final double DRIVE_POWER = 1.0;
 
     @Override
@@ -68,20 +71,42 @@ public class AutonomousUniversal4 extends LinearOpMode {
         telemetry.update();
         leftMotor = hardwareMap.dcMotor.get("left motor");
         rightMotor = hardwareMap.dcMotor.get("right motor");
+        highMotor = hardwareMap.dcMotor.get("highMotor");
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
-        //colorSensor.enableLed(true);
+        colorSensor.enableLed(true);
 
         waitForStart();
         runtime.reset();
 
         // Run the robot
         // action(DRIVE_POWER, time msec)
-        driveF(DRIVE_POWER,420);
+        driveF(DRIVE_POWER,440);
         turnRight(DRIVE_POWER,1000);
-        driveF(DRIVE_POWER,760);
-        turnLeft(DRIVE_POWER,1000);
-        driveF(DRIVE_POWER,2500);
+        driveF(DRIVE_POWER,650);
+        turnLeft(DRIVE_POWER,1800);
+        driveF(DRIVE_POWER,1100);
+        turnRight(DRIVE_POWER,300);
+        driveF(DRIVE_POWER,1450);
+        turnLeft(DRIVE_POWER,1350);
+        driveF(DRIVE_POWER,600);
+        turnLeft(DRIVE_POWER,1450);
         // TODO: press button
+        if (getColorRGB()[0]>200) {
+            double tracker = System.currentTimeMillis()+500;
+            while (System.currentTimeMillis() < tracker) {
+                highMotor.setPower(1.0);
+            }
+        }
+        else {
+            double tracker = System.currentTimeMillis()+550;
+            while (System.currentTimeMillis() < tracker) {
+                leftMotor.setPower(1.0);
+                rightMotor.setPower(1.0);
+            }
+            while (System.currentTimeMillis() < tracker) {
+                highMotor.setPower(1.0);
+            }
+        }
 
         // TODO: press button
 
@@ -109,12 +134,14 @@ public class AutonomousUniversal4 extends LinearOpMode {
     }
 
     public void turnLeft(double power, int time) throws InterruptedException {
-        rightMotor.setPower(power);
-        leftMotor.setPower(-power);
+        rightMotor.setPower(-power);
+        leftMotor.setPower(power);
         Thread.sleep(time);
     }
     public void turnRight(double power, int time) throws InterruptedException {
-        turnLeft(-power,time);
+        rightMotor.setPower(power);
+        leftMotor.setPower(-power);
+        Thread.sleep(time);
     }
     public void stopDriving() {
         leftMotor.setPower(0.0);

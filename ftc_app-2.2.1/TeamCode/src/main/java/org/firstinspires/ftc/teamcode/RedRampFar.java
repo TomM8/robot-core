@@ -52,8 +52,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 
-@Autonomous(name="AutonomousUniversal FarFromRed", group="AutonomousUniversal")
-public class AutonomousUniversal2 extends LinearOpMode {
+@Autonomous(name="RedRampFar", group="Autonomous Red")
+public class RedRampFar extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -77,10 +77,10 @@ public class AutonomousUniversal2 extends LinearOpMode {
         // Run the robot
         // action(DRIVE_POWER, time msec)
         driveF(DRIVE_POWER,420);
-        turnRight(DRIVE_POWER,1000);
-        driveF(DRIVE_POWER,760);
         turnLeft(DRIVE_POWER,1000);
-        driveF(DRIVE_POWER,2500);
+        driveF(DRIVE_POWER,1350);
+        turnLeft(DRIVE_POWER,1000);
+        driveF(DRIVE_POWER,400);
         // TODO: press button
 
         // TODO: press button

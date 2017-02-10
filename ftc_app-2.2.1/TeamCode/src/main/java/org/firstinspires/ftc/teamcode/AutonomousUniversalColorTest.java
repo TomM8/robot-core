@@ -52,7 +52,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 
-@Autonomous(name="AutonomousUniversal ColorTest", group="AutonomousUniversal")
+@Autonomous(name="AutonomousColorTest", group="Component Tests")
 public class AutonomousUniversalColorTest extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -60,6 +60,8 @@ public class AutonomousUniversalColorTest extends LinearOpMode {
     DcMotor leftMotor;
     DcMotor rightMotor;
     ColorSensor colorSensor;
+    DcMotor highMotor;
+    DcMotor centerMotor;
     static final double DRIVE_POWER = 1.0;
 
     @Override
@@ -68,27 +70,32 @@ public class AutonomousUniversalColorTest extends LinearOpMode {
         telemetry.update();
         leftMotor = hardwareMap.dcMotor.get("left motor");
         rightMotor = hardwareMap.dcMotor.get("right motor");
+        highMotor = hardwareMap.dcMotor.get("highMotor");
+        centerMotor = hardwareMap.dcMotor.get("center motor");
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
-        //colorSensor.enableLed(true);
+        colorSensor = hardwareMap.colorSensor.get("color");
+        colorSensor.enableLed(true);
 
         waitForStart();
         runtime.reset();
 
         // Run the robot
         // action(DRIVE_POWER, time msec)
-        driveF(DRIVE_POWER,520);
-        turnRight(DRIVE_POWER,130);
-        driveF(DRIVE_POWER,1237);
-        turnRight(DRIVE_POWER,130);
-        driveF(DRIVE_POWER,1113);
         // TODO: press button
-        driveR(DRIVE_POWER,1113);
-        turnLeft(DRIVE_POWER,888);
-        driveF(DRIVE_POWER,1484);
-        turnRight(DRIVE_POWER,888);
-        driveF(DRIVE_POWER,1484);
-        turnRight(DRIVE_POWER,888);
-        driveF(DRIVE_POWER,1113);
+        if (getColorRGB()[0]>200) {
+            double tracker = System.currentTimeMillis()+500;
+            while (System.currentTimeMillis() < tracker) {
+                highMotor.setPower(1.0);
+            }
+        }
+        else {
+            double tracker = System.currentTimeMillis()+550;
+            while (System.currentTimeMillis() < tracker) {
+                centerMotor.setPower(1.0);
+            }
+
+        }
+
         // TODO: press button
 
         /*
@@ -101,31 +108,28 @@ public class AutonomousUniversalColorTest extends LinearOpMode {
         You can also use it with condition checking:
         if (getColorRGB()[0]>200) { do something }
          */
-
-        //float[] perceivedColor = getColorRGB();
-
-        //perceivedColor = getColorRGB()
-
     }
 
     public void driveF(double power, int time) throws InterruptedException {
-        leftMotor.setPower(power);
-        rightMotor.setPower(power);
-        Thread.sleep(time);
-    }
-    public void driveR(double power, int time) throws InterruptedException {
         leftMotor.setPower(-power);
         rightMotor.setPower(-power);
         Thread.sleep(time);
     }
+    public void driveR(double power, int time) throws InterruptedException {
+        leftMotor.setPower(power);
+        rightMotor.setPower(power);
+        Thread.sleep(time);
+    }
 
     public void turnLeft(double power, int time) throws InterruptedException {
-        rightMotor.setPower(power);
-        leftMotor.setPower(-power);
+        rightMotor.setPower(-power);
+        leftMotor.setPower(power);
         Thread.sleep(time);
     }
     public void turnRight(double power, int time) throws InterruptedException {
-        turnLeft(-power,time);
+        rightMotor.setPower(power);
+        leftMotor.setPower(-power);
+        Thread.sleep(time);
     }
     public void stopDriving() {
         leftMotor.setPower(0.0);
