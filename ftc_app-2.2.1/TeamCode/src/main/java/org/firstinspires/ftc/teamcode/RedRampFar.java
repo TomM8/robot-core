@@ -33,6 +33,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -53,6 +54,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @Autonomous(name="RedRampFar", group="Autonomous Red")
+@Disabled
 public class RedRampFar extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -62,7 +64,8 @@ public class RedRampFar extends LinearOpMode {
     ColorSensor colorSensor;
     DcMotor highMotor;
     static final double DRIVE_POWER = 1.0;
-    static final double DRIVE_LESS_POWER = 0.5;
+    static final double DRIVE_LESS_POWER = 0.3;
+    final double MOVE_TIME = 1.0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -72,21 +75,40 @@ public class RedRampFar extends LinearOpMode {
         rightMotor = hardwareMap.dcMotor.get("right motor");
         highMotor = hardwareMap.dcMotor.get("highMotor");
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftMotor.setDirection(DcMotor.Direction.REVERSE);
         colorSensor.enableLed(false);
 
         waitForStart();
 
         // Run the robot
-        // action(DRIVE_POWER, time msec)
-        driveF(DRIVE_POWER,420);
-        turnLeft(DRIVE_POWER,1000);
-        driveF(DRIVE_POWER,1350);
-        turnLeft(DRIVE_POWER,1000);
-        driveF(DRIVE_POWER,400);
+        // action(DRIVE_POWER, time sec)
+        driveF(DRIVE_POWER,1.85);
+        turnLeft(DRIVE_POWER,1.75);
+        driveF(DRIVE_POWER,1.75);
+        turnLeft(DRIVE_POWER,2.75);
+        driveF(DRIVE_LESS_POWER,0.7);
+        extendArm(DRIVE_POWER,0.9);
         // TODO: press button
+        if (colorSensor.red() > colorSensor.blue()) {
+            highMotor.setPower(1.0);
+            while (runtime.seconds() < MOVE_TIME && opModeIsActive()) ;
+            highMotor.setPower(0);
+        }
+        else {
+            double tracker = System.currentTimeMillis()+550;
+            while (System.currentTimeMillis() < tracker && opModeIsActive()) {
+                leftMotor.setPower(1.0);
+                rightMotor.setPower(1.0);
+            }
+            while (System.currentTimeMillis() < tracker && opModeIsActive()) {
+                highMotor.setPower(1.0);
+            }
+        }
+    }
 
-        // TODO: press button
+
+    // TODO: press button
 
         /*
         To get the color from color sensor, you can assign a variable:
@@ -98,14 +120,12 @@ public class RedRampFar extends LinearOpMode {
         You can also use it with condition checking:
         if (getColorRGB()[0]>200) { do something }
          */
-    }
-
 
     public void driveF(double power, double time) {
         leftMotor.setPower(power);
         rightMotor.setPower(power);
         runtime.reset();
-        while (runtime.seconds() < time);
+        while (runtime.seconds() < time && opModeIsActive());
         leftMotor.setPower(0.0);
         rightMotor.setPower(0.0);
         waitSec(0.3);
@@ -115,7 +135,7 @@ public class RedRampFar extends LinearOpMode {
         leftMotor.setPower(-power);
         rightMotor.setPower(-power);
         runtime.reset();
-        while (runtime.seconds() < time);
+        while (runtime.seconds() < time && opModeIsActive());
         leftMotor.setPower(0.0);
         rightMotor.setPower(0.0);
         waitSec(0.3);
@@ -125,7 +145,7 @@ public class RedRampFar extends LinearOpMode {
         rightMotor.setPower(power);
         leftMotor.setPower(-power);
         runtime.reset();
-        while (runtime.seconds() < time);
+        while (runtime.seconds() < time && opModeIsActive());
         leftMotor.setPower(0.0);
         rightMotor.setPower(0.0);
         waitSec(0.3);
@@ -136,7 +156,7 @@ public class RedRampFar extends LinearOpMode {
         rightMotor.setPower(-power);
         leftMotor.setPower(power);
         runtime.reset();
-        while (runtime.seconds() < time);
+        while (runtime.seconds() < time && opModeIsActive());
         leftMotor.setPower(0.0);
         rightMotor.setPower(0.0);
         waitSec(0.3);
@@ -147,13 +167,16 @@ public class RedRampFar extends LinearOpMode {
         rightMotor.setPower(0.0);
     }
 
-    // Elements of array are Red,Green,Blue - in that order
-    public float[] getColorRGB() {
-        return new float[]{colorSensor.red(),colorSensor.green(),colorSensor.blue()};
+    public void extendArm(double power, double time) {
+        highMotor.setPower(1.0);
     }
+
+    public void shortenArm(double power, double time) {
+        highMotor.setPower(-1.0);
+    }
+
     public void waitSec(double length) {
         runtime.reset();
-        while (runtime.seconds() < length);
-
+        while (runtime.seconds() < length && opModeIsActive());
     }
 }
