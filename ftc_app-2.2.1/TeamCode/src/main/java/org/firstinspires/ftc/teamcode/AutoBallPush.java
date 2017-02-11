@@ -83,8 +83,6 @@ public class AutoBallPush extends LinearOpMode {
         // action(DRIVE_POWER, time sec)
         waitSec(12);
         driveF(DRIVE_POWER,2.05);
-        turnLeft(DRIVE_POWER,1.45);
-        driveF(DRIVE_POWER,12.0);
         // TODO: press button
 
         }
