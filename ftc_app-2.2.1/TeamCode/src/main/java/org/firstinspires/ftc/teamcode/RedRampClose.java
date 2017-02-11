@@ -86,8 +86,9 @@ public class RedRampClose extends LinearOpMode {
         // action(DRIVE_POWER, time sec)
         driveF(DRIVE_POWER,1.65);
         turnLeft(DRIVE_POWER,1.75);
-        driveF(DRIVE_POWER,1.65);
-        turnLeftArc(2.85); // todo: this time value may not be correct
+        //driveF(DRIVE_POWER,1.35);
+        turnLeftArc(2.35); // todo: this time value may not be correct
+        turnLeft(DRIVE_POWER,1.65);
         driveF(DRIVE_LESS_POWER,0.7);
         // TODO: press button
         if (colorSensor.red() > colorSensor.blue()) {

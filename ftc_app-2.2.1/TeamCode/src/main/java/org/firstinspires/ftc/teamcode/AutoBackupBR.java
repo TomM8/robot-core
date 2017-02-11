@@ -81,27 +81,12 @@ public class AutoBackupBR extends LinearOpMode {
 
         // Run the robot
         // action(DRIVE_POWER, time sec)
-        driveF(DRIVE_POWER,1.65);
-        turnLeft(DRIVE_POWER,1.75);
-        driveF(DRIVE_POWER,1.65);
-        turnLeftArc(2.85); // todo: this time value may not be correct
-        driveF(DRIVE_LESS_POWER,0.7);
+        waitSec(12);
+        driveF(DRIVE_POWER,0.85);
+        turnRight(DRIVE_POWER,1.35);
+        driveF(DRIVE_POWER,1.45);
         // TODO: press button
-        if (colorSensor.red() > colorSensor.blue()) {
-            highMotor.setPower(1.0);
-            while (runtime.seconds() < MOVE_TIME && opModeIsActive()) ;
-            highMotor.setPower(0);
-            }
-        else {
-            double tracker = System.currentTimeMillis()+550;
-            while (System.currentTimeMillis() < tracker && opModeIsActive()) {
-                leftMotor.setPower(1.0);
-                rightMotor.setPower(1.0);
-            }
-            while (System.currentTimeMillis() < tracker && opModeIsActive()) {
-                highMotor.setPower(1.0);
-            }
-           }
+
         }
 
         /*
