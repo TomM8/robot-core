@@ -32,31 +32,32 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
  * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
  * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
- *
+ * <p>
  * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
  * It includes all the skeletal structure that all linear OpModes contain.
- *
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
 
-@Autonomous(name="RedRampFar", group="Autonomous Red")
-@Disabled
-public class RedRampFar extends LinearOpMode {
-
+@Autonomous(name = "Beacon Press R", group = "Autonomous Red")
+public class AutoRedBeacon extends LinearOpMode {
+    // orig
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
     DcMotor leftMotor;
@@ -70,7 +71,9 @@ public class RedRampFar extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry.addData("Status", "Initialized");
+        telemetry.addLine("Place next to ramp");
         telemetry.update();
+
         leftMotor = hardwareMap.dcMotor.get("left motor");
         rightMotor = hardwareMap.dcMotor.get("right motor");
         highMotor = hardwareMap.dcMotor.get("highMotor");
@@ -79,36 +82,53 @@ public class RedRampFar extends LinearOpMode {
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
         colorSensor.enableLed(false);
 
+        telemetry.addData("LMotor:", leftMotor.getConnectionInfo(), leftMotor.getDirection());
+        telemetry.addData("RMotor:", rightMotor.getConnectionInfo(), rightMotor.getDirection());
+        telemetry.addData("HMotor:", highMotor.getConnectionInfo(), rightMotor.getDirection());
+        telemetry.addData("Color:", colorSensor.getConnectionInfo());
+        telemetry.update();
+
         waitForStart();
+
+        telemetry.clearAll();
+        telemetry.addLine("Color Sensor");
+        telemetry.addData("Red:", colorSensor.red());
+        telemetry.addData("Green:", colorSensor.green());
+        telemetry.addData("Blue:", colorSensor.blue());
+        telemetry.update();
 
         // Run the robot
         // action(DRIVE_POWER, time sec)
-        driveF(DRIVE_POWER,1.85);
-        turnLeft(DRIVE_POWER,1.75);
-        driveF(DRIVE_POWER,1.75);
-        turnLeft(DRIVE_POWER,2.75);
-        driveF(DRIVE_LESS_POWER,0.7);
-        extendArm(DRIVE_POWER,0.9);
-        // TODO: press button
+        driveF(DRIVE_POWER, 1.65);
+        turnLeft(DRIVE_POWER, 1.75);
+        driveF(DRIVE_POWER,1.35);
+        turnLeftArc(2.35); // todo: this time value may not be correct
+        turnLeft(DRIVE_POWER, 1.65);
+        driveF(DRIVE_LESS_POWER, 0.7);
+
+        //region Claim beacon
         if (colorSensor.red() > colorSensor.blue()) {
             highMotor.setPower(1.0);
             while (runtime.seconds() < MOVE_TIME && opModeIsActive()) ;
             highMotor.setPower(0);
-        }
-        else {
-            double tracker = System.currentTimeMillis()+550;
+        } else {
+            double tracker = System.currentTimeMillis() + 550;
             while (System.currentTimeMillis() < tracker && opModeIsActive()) {
                 leftMotor.setPower(1.0);
                 rightMotor.setPower(1.0);
             }
-            while (System.currentTimeMillis() < tracker && opModeIsActive()) {
-                highMotor.setPower(1.0);
-            }
+            stopDriving();
+            highMotor.setPower(1.0);
+            while (runtime.seconds() < MOVE_TIME && opModeIsActive()) ;
+            highMotor.setPower(0);
         }
+        //endregion
+
+        turnLeft(DRIVE_POWER,0.9);
+        driveF(DRIVE_POWER,1.5);
+        turnRight(DRIVE_POWER,1.2);
+        driveF(DRIVE_POWER,12);
     }
-
-
-    // TODO: press button
 
         /*
         To get the color from color sensor, you can assign a variable:
@@ -124,41 +144,47 @@ public class RedRampFar extends LinearOpMode {
     public void driveF(double power, double time) {
         leftMotor.setPower(power);
         rightMotor.setPower(power);
-        runtime.reset();
-        while (runtime.seconds() < time && opModeIsActive());
-        leftMotor.setPower(0.0);
-        rightMotor.setPower(0.0);
+        waitSec(time);
+        stopDriving();
         waitSec(0.3);
     }
 
     public void driveR(double power, double time) {
         leftMotor.setPower(-power);
         rightMotor.setPower(-power);
-        runtime.reset();
-        while (runtime.seconds() < time && opModeIsActive());
-        leftMotor.setPower(0.0);
-        rightMotor.setPower(0.0);
+        waitSec(time);
+        stopDriving();
         waitSec(0.3);
     }
 
     public void turnLeft(double power, double time) {
         rightMotor.setPower(power);
         leftMotor.setPower(-power);
-        runtime.reset();
-        while (runtime.seconds() < time && opModeIsActive());
-        leftMotor.setPower(0.0);
-        rightMotor.setPower(0.0);
+        waitSec(time);
+        stopDriving();
         waitSec(0.3);
 
+    }
+
+    public void turnLeftArc(double time) {
+        rightMotor.setPower(1.0);
+        leftMotor.setPower(0.1);
+        waitSec(time);
+        stopDriving();
+    }
+
+    public void turnRightArc(double time) {
+        leftMotor.setPower(1.0);
+        rightMotor.setPower(0.1);
+        waitSec(time);
+        stopDriving();
     }
 
     public void turnRight(double power, double time) {
         rightMotor.setPower(-power);
         leftMotor.setPower(power);
-        runtime.reset();
-        while (runtime.seconds() < time && opModeIsActive());
-        leftMotor.setPower(0.0);
-        rightMotor.setPower(0.0);
+        waitSec(time);
+        stopDriving();
         waitSec(0.3);
     }
 
@@ -168,15 +194,19 @@ public class RedRampFar extends LinearOpMode {
     }
 
     public void extendArm(double power, double time) {
-        highMotor.setPower(1.0);
+        highMotor.setPower(-0.5);
+        waitSec(time);
+        highMotor.setPower(0.0);
     }
 
     public void shortenArm(double power, double time) {
-        highMotor.setPower(-1.0);
+        highMotor.setPower(0.5);
+        waitSec(time);
+        highMotor.setPower(0.0);
     }
 
     public void waitSec(double length) {
         runtime.reset();
-        while (runtime.seconds() < length && opModeIsActive());
+        while (runtime.seconds() < length && opModeIsActive()) ;
     }
 }
