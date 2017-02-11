@@ -52,8 +52,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 
-@Autonomous(name="Auto Other Backup Blue Ramp", group="Autonomous Blue")
-public class AutoBlueBallBlueRamp extends LinearOpMode {
+@Autonomous(name="Auto BlueMain", group="Autonomous Red")
+public class AutoBlueMain extends LinearOpMode {
     // orig
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -61,6 +61,7 @@ public class AutoBlueBallBlueRamp extends LinearOpMode {
     DcMotor rightMotor;
     ColorSensor colorSensor;
     DcMotor highMotor;
+    DcMotor centerMotor;
     static final double DRIVE_POWER = 1.0;
     static final double DRIVE_LESS_POWER = 0.3;
     final double MOVE_TIME = 1.0;
@@ -73,6 +74,7 @@ public class AutoBlueBallBlueRamp extends LinearOpMode {
         rightMotor = hardwareMap.dcMotor.get("right motor");
         highMotor = hardwareMap.dcMotor.get("highMotor");
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        centerMotor = hardwareMap.dcMotor.get("center motor");
         rightMotor.setDirection(DcMotor.Direction.FORWARD);
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
         colorSensor.enableLed(false);
@@ -81,13 +83,15 @@ public class AutoBlueBallBlueRamp extends LinearOpMode {
 
         // Run the robot
         // action(DRIVE_POWER, time sec)
-        waitSec(12);
-        driveF(DRIVE_POWER,1.65);
-        turnRight(DRIVE_POWER,1.85);
+        driveF(DRIVE_POWER,1.95);
+        waitSec(4);
+        turnRight(DRIVE_POWER,3.05);
         driveF(DRIVE_POWER,12.0);
+        pushParticles(DRIVE_POWER,10.0);
+
         // TODO: press button
 
-        }
+    }
 
         /*
         To get the color from color sensor, you can assign a variable:
@@ -155,6 +159,13 @@ public class AutoBlueBallBlueRamp extends LinearOpMode {
         highMotor.setPower(0.5);
         waitSec(time);
         highMotor.setPower(0.0);
+    }
+
+    public void pushParticles(double power, double time) {
+        waitSec(15.0);
+        while(leftMotor.getPower()>0.0 && rightMotor.getPower()>0.0) {
+            centerMotor.setPower(1.0);
+        }
     }
 
     public void waitSec(double length) {

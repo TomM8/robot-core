@@ -52,8 +52,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 
-@Autonomous(name="Auto Backup ball Park", group="Autonomous Neutral")
-public class AutoBallPush extends LinearOpMode {
+@Autonomous(name="Auto Ball Push/Park", group="Autonomous Neutral")
+public class AutoBallPushStop extends LinearOpMode {
     // orig
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -83,6 +83,8 @@ public class AutoBallPush extends LinearOpMode {
         // action(DRIVE_POWER, time sec)
         waitSec(12);
         driveF(DRIVE_POWER,2.05);
+        waitSec(4);
+        driveF(DRIVE_POWER,0.55);
         // TODO: press button
 
         }
