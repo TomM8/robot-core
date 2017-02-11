@@ -83,7 +83,7 @@ public class AutoRedRamp extends LinearOpMode {
         // action(DRIVE_POWER, time sec)
         waitSec(12);
         driveF(DRIVE_POWER, 0.65);
-        turnLeft(DRIVE_POWER, 1.35);
+        turnLeft(DRIVE_POWER, 1.25);
         driveF(DRIVE_POWER, 12.0);
         // TODO: press button
 
