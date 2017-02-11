@@ -52,8 +52,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 
-@Autonomous(name="Auto Backup Blue Ramp", group="Backup Autonomous")
-public class AutoBackupBR extends LinearOpMode {
+@Autonomous(name="Auto Other Backup Red Ramp", group="Autonomous Red")
+public class AutoRedBallRedRamp extends LinearOpMode {
     // orig
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -82,14 +82,12 @@ public class AutoBackupBR extends LinearOpMode {
         // Run the robot
         // action(DRIVE_POWER, time sec)
         waitSec(12);
-        driveF(DRIVE_POWER, 0.65);
-        turnLeft(DRIVE_POWER, 1.35);
-        driveF(DRIVE_POWER, 1.35);
-        turnLeft(DRIVE_POWER, 1.45);
-        driveF(DRIVE_POWER, 12.0);
+        driveF(DRIVE_POWER,1.65);
+        turnLeft(DRIVE_POWER,1.85);
+        driveF(DRIVE_POWER,7.5);
         // TODO: press button
 
-        }
+    }
 
         /*
         To get the color from color sensor, you can assign a variable:

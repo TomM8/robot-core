@@ -52,8 +52,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 
-@Autonomous(name="Auto Other Backup Blue Ramp", group="Backup Autonomous")
-public class AutoBackupBBR extends LinearOpMode {
+@Autonomous(name="Auto Backup Blue Ramp", group="Autonomous Blue")
+public class AutoBlueRamp extends LinearOpMode {
     // orig
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -82,9 +82,11 @@ public class AutoBackupBBR extends LinearOpMode {
         // Run the robot
         // action(DRIVE_POWER, time sec)
         waitSec(12);
-        driveF(DRIVE_POWER,1.65);
-        turnRight(DRIVE_POWER,1.85);
-        driveF(DRIVE_POWER,7.5);
+        driveF(DRIVE_POWER, 0.65);
+        turnLeft(DRIVE_POWER, 1.35);
+        driveF(DRIVE_POWER, 1.35);
+        turnLeft(DRIVE_POWER, 1.45);
+        driveF(DRIVE_POWER, 12.0);
         // TODO: press button
 
         }
