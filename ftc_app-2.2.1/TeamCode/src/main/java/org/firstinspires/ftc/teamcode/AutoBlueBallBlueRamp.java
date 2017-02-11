@@ -84,7 +84,7 @@ public class AutoBlueBallBlueRamp extends LinearOpMode {
         waitSec(12);
         driveF(DRIVE_POWER,1.65);
         turnRight(DRIVE_POWER,1.85);
-        driveF(DRIVE_POWER,7.5);
+        driveF(DRIVE_POWER,12.0);
         // TODO: press button
 
         }
