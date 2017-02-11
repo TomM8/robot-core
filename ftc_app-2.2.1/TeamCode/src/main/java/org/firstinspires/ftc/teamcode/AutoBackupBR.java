@@ -82,9 +82,11 @@ public class AutoBackupBR extends LinearOpMode {
         // Run the robot
         // action(DRIVE_POWER, time sec)
         waitSec(12);
-        driveF(DRIVE_POWER,0.85);
-        turnRight(DRIVE_POWER,1.35);
-        driveF(DRIVE_POWER,1.45);
+        driveF(DRIVE_POWER, 0.65);
+        turnLeft(DRIVE_POWER, 1.35);
+        driveF(DRIVE_POWER, 1.35);
+        turnLeft(DRIVE_POWER, 1.45);
+        driveF(DRIVE_POWER, 12.0);
         // TODO: press button
 
         }
