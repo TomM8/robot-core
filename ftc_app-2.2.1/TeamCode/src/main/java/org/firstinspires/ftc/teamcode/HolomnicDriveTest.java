@@ -43,16 +43,15 @@ import com.qualcomm.robotcore.util.Range;
  * CONTROL SCHEME
  *
  * Gamepad 1:
- * Left wheel - left joystick
- * Right wheel - right joystick
- * Center wheel - left/right triggers
+ * Motor one and motor two - left joystick
+ * Motor three and motor four - right joystick
  * Color sensor enable - X
- * Button pusher - dpad up/down
  */
 
 // It's a teleop. It ops the tele. Simple.
-@TeleOp(name = "MainTeleOp", group = "Iterative Opmode")
-public class MainTeleOp extends OpMode {
+// This is the teleOp for the new and improved robot!!!
+@TeleOp(name = "HolomnicDriveTest", group = "Iterative Opmode")
+public class HolomnicDriveTest extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     // These are constants, once you set them you cannot change them
@@ -64,10 +63,10 @@ public class MainTeleOp extends OpMode {
     static final double MOTOR_POWER_OFF=0.0;
 
     // Defining your motors - DcMotor is a class provided by the FTC SDK (software dev kit)
-    DcMotor leftMotor;
-    DcMotor rightMotor;
-    DcMotor centerMotor;
-    DcMotor highMotor;
+    DcMotor motorFrontRight;
+    DcMotor motorFrontLeft;
+    DcMotor motorBackRight;
+    DcMotor motorBackLeft;
 
     // Similarly, if you wanted to define a servo, you would put:
     // Servo servoName;
@@ -86,15 +85,14 @@ public class MainTeleOp extends OpMode {
          * The argument in quotes is the name of the motor. You set this in the robot profile
          * on the robot controller phone.
          */
-        leftMotor = hardwareMap.dcMotor.get("left motor"); // MAP ALL THE HARDWARE
-        rightMotor = hardwareMap.dcMotor.get("right motor"); // HARDWARE ALL THE MAP
-        centerMotor = hardwareMap.dcMotor.get("center motor");
-        highMotor = hardwareMap.dcMotor.get("highMotor");
+        motorFrontRight = hardwareMap.dcMotor.get("motor front right"); // MAP ALL THE HARDWARE
+        motorFrontLeft = hardwareMap.dcMotor.get("motor front left"); // HARDWARE ALL THE MAP
+        motorBackRight = hardwareMap.dcMotor.get("motor back right");
+        motorBackLeft = hardwareMap.dcMotor.get("motor back left");
 
         // You have to reverse one motor, otherwise a power value of 1.0 would make the motors run
         // in different directions. This just makes it more convenient, so you don't have to use 1.0
         // for one motor and -1.0 for the other motor.
-        rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }
 
@@ -118,74 +116,47 @@ public class MainTeleOp extends OpMode {
     public void loop() {
         // If you put the cursor on a comment that says "region" and press command-minus, you can collapse the code
 
+        // Here the left stick controls the direction and the right stick controls X controls rotation
+        float gamepad1LeftY = gamepad1.left_stick_y;
+        float gamepad1LeftX = gamepad1.left_stick_x;
+        float gamepad1RightX = gamepad1.right_stick_x;
+
+        // These are the holomnic formulas for each of of the different directions that it goes in
+        float FrontLeft = -gamepad1LeftY - gamepad1LeftX - gamepad1RightX;
+        float FrontRight = gamepad1LeftY - gamepad1LeftX - gamepad1RightX;
+        float BackRight = gamepad1LeftY + gamepad1LeftX - gamepad1RightX;
+        float BackLeft = -gamepad1LeftY + gamepad1LeftX - gamepad1RightX;
+
+        // clip the right/left values so that the values never exceed +/- 1
+        FrontRight = Range.clip(FrontRight, -1, 1);
+        FrontLeft = Range.clip(FrontLeft, -1, 1);
+        BackLeft = Range.clip(BackLeft, -1, 1);
+        BackRight = Range.clip(BackRight, -1, 1);
+
+        // write the values to the motors
+        motorFrontRight.setPower(FrontRight);
+        motorFrontLeft.setPower(FrontLeft);
+        motorBackLeft.setPower(BackLeft);
+        motorBackRight.setPower(BackRight);
+
         //region Telemetry
         // Telemetry == stuff that shows up on the driver station phone screen
-        telemetry.addData("Status", "Running: " + runtime.toString());
-        telemetry.addData("Wheels", "l: " + leftMotor.getPower() + " r: " + rightMotor.getPower());
+        telemetry.addData("Text", "*** Robot Data***");
+        telemetry.addData("Joy XL YL XR",  String.format("%.2f", gamepad1LeftX) + " " +
+                String.format("%.2f", gamepad1LeftY) + " " +  String.format("%.2f", gamepad1RightX));
+        telemetry.addData("f left pwr",  "front left  pwr: " + String.format("%.2f", FrontLeft));
+        telemetry.addData("f right pwr", "front right pwr: " + String.format("%.2f", FrontRight));
+        telemetry.addData("b right pwr", "back right pwr: " + String.format("%.2f", BackRight));
+        telemetry.addData("b left pwr", "back left pwr: " + String.format("%.2f", BackLeft));
+
         //endregion
 
-        //region WHEELS
+        //region Wheels
 
-        /*
-        * Left/right wheels use the joystickToMotorValue method.
-        * It first clips the joystick value so that it's between -1.0 and 1.0,
-        * then it scales the input so you still get precision control.
-        * Finally, setPower() writes the value to the motor.
-         */
-
-        // Left wheel
-        // There will be 4 motors in the nex design
-        // This will have to be changed to fit M1 and M2 on the right stick and M3 and m4 on the left stick
-        // Sample code my look as follows
-
-
-
-        leftMotor.setPower(joystickToMotorValue(gamepad1.left_stick_y)); // This sets power
-
-        // Right wheel
-        rightMotor.setPower(joystickToMotorValue(gamepad1.right_stick_y)); // This sets power. again. but the other motor.
-
-        /*
-        * The center wheel works differently, it reads values from triggers.
-        * Triggers are by default in a range of 0.0 (not pressed) to 1.0 (fully pressed).
-        * So we don't have to scale or clip anything.
-        * All we're doing is checking if only one trigger is pressed, and then setting the value
-        * of that trigger to a variable centerPower. If both triggers are pressed, that centerPower
-        * becomes 0.0 (i.e. if you press both triggers, the motor does nothing).
-        * Finally, we use setPower() to write the value in the variable to the motor.
-         */
-        // Center wheels
-        double centerPower;
-        if (gamepad1.right_trigger>0.0 && gamepad1.left_trigger==0.0) {
-            centerPower=gamepad1.right_trigger;
-        }
-        else if (gamepad1.left_trigger>0.0 && gamepad1.right_trigger==0.0) {
-            centerPower=-gamepad1.left_trigger;
-        }
-        else {
-            centerPower=MOTOR_POWER_OFF;
-        }
-        centerMotor.setPower(centerPower);
 
 
         //endregion
 
-        //region Button Clicker
-        // We're reading the value from buttons, which are true (pressed) or false (not pressed)
-        // Using MOTOR_HALF_POWER so that it doesn't run too quickly. If neither dpad_up or dpad_down
-        // is pressed, the motor is off.
-        if(gamepad1.dpad_up){
-
-            highMotor.setPower(-MOTOR_HALF_POWER);
-        }
-        else if (gamepad1.dpad_down) {
-
-            highMotor.setPower(MOTOR_HALF_POWER);
-        }
-        else {
-            highMotor.setPower(MOTOR_POWER_OFF);
-        }
-        //endregion
 
     }
 

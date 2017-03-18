@@ -32,10 +32,14 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
+import android.hardware.Sensor;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -52,7 +56,7 @@ import com.qualcomm.robotcore.util.Range;
 
 // It's a teleop. It ops the tele. Simple.
 @TeleOp(name = "MainTeleOp", group = "Iterative Opmode")
-public class MainTeleOp extends OpMode {
+public class OmniWheelTest extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     // These are constants, once you set them you cannot change them
@@ -68,6 +72,8 @@ public class MainTeleOp extends OpMode {
     DcMotor rightMotor;
     DcMotor centerMotor;
     DcMotor highMotor;
+    ColorSensor colorSensor;
+    TouchSensor TouchSensor;
 
     // Similarly, if you wanted to define a servo, you would put:
     // Servo servoName;
@@ -90,11 +96,14 @@ public class MainTeleOp extends OpMode {
         rightMotor = hardwareMap.dcMotor.get("right motor"); // HARDWARE ALL THE MAP
         centerMotor = hardwareMap.dcMotor.get("center motor");
         highMotor = hardwareMap.dcMotor.get("highMotor");
+        colorSensor = hardwareMap.colorSensor.get("color sensor");
+        TouchSensor = hardwareMap.touchSensor.get("touch sensor");
 
         // You have to reverse one motor, otherwise a power value of 1.0 would make the motors run
         // in different directions. This just makes it more convenient, so you don't have to use 1.0
         // for one motor and -1.0 for the other motor.
         rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
     }
 
@@ -134,16 +143,14 @@ public class MainTeleOp extends OpMode {
          */
 
         // Left wheel
-        // There will be 4 motors in the nex design
-        // This will have to be changed to fit M1 and M2 on the right stick and M3 and m4 on the left stick
-        // Sample code my look as follows
-
-
-
-        leftMotor.setPower(joystickToMotorValue(gamepad1.left_stick_y)); // This sets power
+        //leftMotor.setPower(joystickToMotorValue(gamepad1.left_stick_y)); // This sets power
 
         // Right wheel
-        rightMotor.setPower(joystickToMotorValue(gamepad1.right_stick_y)); // This sets power. again. but the other motor.
+        //rightMotor.setPower(joystickToMotorValue(gamepad1.right_stick_y)); // This sets power. again. but the other motor.
+
+
+
+
 
         /*
         * The center wheel works differently, it reads values from triggers.
