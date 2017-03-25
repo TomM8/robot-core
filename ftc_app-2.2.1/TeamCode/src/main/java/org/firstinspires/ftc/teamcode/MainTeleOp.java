@@ -60,6 +60,7 @@ public class MainTeleOp extends OpMode {
     static final double MOTOR_FULL_POWER=1.0;
     static final double MOTOR_LESS_POWER=0.7;
     static final double MOTOR_HALF_POWER=0.5;
+    static final double MOTER_LEAST_POWER=0.3;
     static final double MOTOR_POWER_OFF=0.0;
 
     // Defining your motors - DcMotor is a class provided by the FTC SDK (software dev kit)
@@ -87,18 +88,18 @@ public class MainTeleOp extends OpMode {
          * The argument in quotes is the name of the motor. You set this in the robot profile
          * on the robot controller phone.
          */
-        //motorOne = hardwareMap.dcMotor.get("motor one"); // MAP ALL THE HARDWARE
-        //motorTwo = hardwareMap.dcMotor.get("motor two"); // HARDWARE ALL THE MAP
-        //motorThree = hardwareMap.dcMotor.get("motor three");
-        //motorFour = hardwareMap.dcMotor.get("motor four");
+        motorOne = hardwareMap.dcMotor.get("motor one"); // MAP ALL THE HARDWARE
+        motorTwo = hardwareMap.dcMotor.get("motor two"); // HARDWARE ALL THE MAP
+        motorThree = hardwareMap.dcMotor.get("motor three");
+        motorFour = hardwareMap.dcMotor.get("motor four");
         centerMotor = hardwareMap.dcMotor.get("center motor");
         liftMotor = hardwareMap.dcMotor.get("lift motor");
 
         // You have to reverse one motor, otherwise a power value of 1.0 would make the motors run
         // in different directions. This just makes it more convenient, so you don't have to use 1.0
         // for one motor and -1.0 for the other motor.
-        //motorOne.setDirection(DcMotorSimple.Direction.REVERSE);
-        //motorThree.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorOne.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorThree.setDirection(DcMotorSimple.Direction.REVERSE);
         liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }
@@ -126,9 +127,11 @@ public class MainTeleOp extends OpMode {
         // If you put the cursor on a comment that says "region" and press command-minus, you can collapse the code
 
         //region Telemetry
+
         // Telemetry == stuff that shows up on the driver station phone screen
-        //telemetry.addData("Status", "Running: " + runtime.toString());
-        //telemetry.addData("Wheels", "1: " + motorOne.getPower() + " 2: " + motorTwo.getPower() + " 3: " + motorThree.getPower() + "4: " + motorFour.getPower());
+        telemetry.addData("Status", "Running: " + runtime.toString());
+        telemetry.addData("Wheels", "1: " + motorOne.getPower() + " 2: " + motorTwo.getPower() + " 3: " + motorThree.getPower() + "4: " + motorFour.getPower());
+
         //endregion
 
         //region Wheels
@@ -137,13 +140,28 @@ public class MainTeleOp extends OpMode {
         // There will be 4 motors in the next design
         // This should now work to have motor one and motor two to work on the left joystick and motor three and four to work on the right joystick
 
-        // This will set motor one and motor two to guide the robot forwards and backwards
-        //motorOne.setPower(joystickToMotorValue(gamepad1.right_stick_y)); // This sets power
-        //motorTwo.setPower(joystickToMotorValue(gamepad1.right_stick_y));
 
-        // This will set motor three and motor four to guide the robot to the left and right
-        //motorThree.setPower(joystickToMotorValue(gamepad1.left_stick_x)); // This sets power. again. but the other motor.
-        //motorFour.setPower(joystickToMotorValue(gamepad1.left_stick_x));  // Move the joystick left and right
+        // This will let the robot turn right and left
+        if(gamepad1.left_bumper){
+            motorOne.setPower(-MOTOR_FULL_POWER);
+            motorTwo.setPower(MOTOR_FULL_POWER);
+            motorThree.setPower(-MOTOR_FULL_POWER);
+            motorFour.setPower(MOTOR_FULL_POWER);
+        }
+        else if(gamepad1.right_bumper) {
+            motorOne.setPower(MOTOR_FULL_POWER);
+            motorTwo.setPower(-MOTOR_FULL_POWER);
+            motorThree.setPower(MOTOR_FULL_POWER);
+            motorFour.setPower(-MOTOR_FULL_POWER);
+        }
+        else{
+            motorOne.setPower(joystickToMotorValue(gamepad1.left_stick_y)); // This sets power
+            motorTwo.setPower(joystickToMotorValue(gamepad1.left_stick_y));
+
+            // This will set motor three and motor four to guide the robot to the left and right
+            motorThree.setPower(joystickToMotorValue(gamepad1.left_stick_x)); // This sets power. again. but the other motor.
+            motorFour.setPower(joystickToMotorValue(gamepad1.left_stick_x));  // Move the joystick left and right
+        }
 
 
         //endregion
@@ -152,6 +170,9 @@ public class MainTeleOp extends OpMode {
 
         if(gamepad1.a){
             centerMotor.setPower(MOTOR_HALF_POWER);
+        }
+        else if(gamepad1.b){
+            centerMotor.setPower(-MOTOR_HALF_POWER);
         }
         else {
             centerMotor.setPower(MOTOR_POWER_OFF);
@@ -162,13 +183,22 @@ public class MainTeleOp extends OpMode {
         //region lifting motor
 
         double liftPower;
-        if (gamepad1.left_trigger>0.0) {
+        if(gamepad1.left_trigger>0.0) {
             liftPower=gamepad1.left_trigger;
         }
         else {
             liftPower=MOTOR_POWER_OFF;
         }
         liftMotor.setPower(liftPower);
+
+        // This is another button deidicated to the lift motor (idk if good idea) but yeah its cool
+        //if(gamepad1.left_bumper){
+            //centerMotor.setPower(MOTER_LEAST_POWER);
+        //}
+        //else {
+            //centerMotor.setPower(MOTOR_POWER_OFF);
+        //}
+
 
         //endregion
     }
