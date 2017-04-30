@@ -39,6 +39,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+
 /**
  * CONTROL SCHEME
  *
@@ -67,6 +68,7 @@ public class HolomnicDriveTest extends OpMode {
     DcMotor motorFrontLeft;
     DcMotor motorBackRight;
     DcMotor motorBackLeft;
+
 
     // Similarly, if you wanted to define a servo, you would put:
     // Servo servoName;

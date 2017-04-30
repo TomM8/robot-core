@@ -38,6 +38,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * CONTROL SCHEME
@@ -68,8 +69,11 @@ public class MainTeleOp extends OpMode {
     DcMotor motorTwo;
     DcMotor motorThree;
     DcMotor motorFour;
-    DcMotor centerMotor;
+    DcMotor centerMotorOne;
     DcMotor liftMotor;
+    DcMotor centerMotorTwo;
+    Servo ballStopper;
+
 
     // Similarly, if you wanted to define a servo, you would put:
     // Servo servoName;
@@ -92,8 +96,10 @@ public class MainTeleOp extends OpMode {
         motorTwo = hardwareMap.dcMotor.get("motor two"); // HARDWARE ALL THE MAP
         motorThree = hardwareMap.dcMotor.get("motor three");
         motorFour = hardwareMap.dcMotor.get("motor four");
-        centerMotor = hardwareMap.dcMotor.get("center motor");
-        liftMotor = hardwareMap.dcMotor.get("lift motor");
+        centerMotorOne = hardwareMap.dcMotor.get("center motor one");
+        centerMotorTwo = hardwareMap.dcMotor.get("center motor two");
+        liftMotor = hardwareMap.dcMotor.get("lift motor ");
+        ballStopper = hardwareMap.servo.get("ball stopper");
 
         // You have to reverse one motor, otherwise a power value of 1.0 would make the motors run
         // in different directions. This just makes it more convenient, so you don't have to use 1.0
@@ -166,21 +172,22 @@ public class MainTeleOp extends OpMode {
 
         //endregion
 
-        //region center motor
+        //region center motors
 
-        if(gamepad1.a){
-            centerMotor.setPower(MOTOR_HALF_POWER);
-        }
-        else if(gamepad1.b){
-            centerMotor.setPower(-MOTOR_HALF_POWER);
-        }
-        else {
-            centerMotor.setPower(MOTOR_POWER_OFF);
-        }
+        //if(gamepad1.a){
+            //centerMotorOne.setPower(MOTOR_FULL_POWER);
+            //centerMotorTwo.setPower(MOTOR_FULL_POWER);
+        //}
+        //else {
+            //centerMotorOne.setPower(MOTOR_POWER_OFF);
+            //centerMotorTwo.setPower(MOTOR_POWER_OFF);
+        //}
 
         //endregion
 
-        //region lifting motor
+        //region lifting motors
+
+        //remember this motor will spin two sets of lifters
 
         double liftPower;
         if(gamepad1.left_trigger>0.0) {
@@ -199,6 +206,17 @@ public class MainTeleOp extends OpMode {
             //centerMotor.setPower(MOTOR_POWER_OFF);
         //}
 
+
+        //endregion
+
+        //region Ball stopping servo
+
+        if(gamepad1.a){
+            ballStopper.setPosition(1.0);
+        }
+        else if(gamepad1.b){
+            ballStopper.setPosition(0.0);
+        }
 
         //endregion
     }
