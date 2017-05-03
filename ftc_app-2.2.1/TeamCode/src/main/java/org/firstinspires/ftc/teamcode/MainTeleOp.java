@@ -69,9 +69,7 @@ public class MainTeleOp extends OpMode {
     DcMotor motorTwo;
     DcMotor motorThree;
     DcMotor motorFour;
-    DcMotor centerMotorOne;
     DcMotor liftMotor;
-    DcMotor centerMotorTwo;
     Servo ballStopper;
 
 
@@ -96,17 +94,14 @@ public class MainTeleOp extends OpMode {
         motorTwo = hardwareMap.dcMotor.get("motor two"); // HARDWARE ALL THE MAP
         motorThree = hardwareMap.dcMotor.get("motor three");
         motorFour = hardwareMap.dcMotor.get("motor four");
-        centerMotorOne = hardwareMap.dcMotor.get("center motor one");
-        centerMotorTwo = hardwareMap.dcMotor.get("center motor two");
-        liftMotor = hardwareMap.dcMotor.get("lift motor ");
-        ballStopper = hardwareMap.servo.get("ball stopper");
+        liftMotor = hardwareMap.dcMotor.get("lift motor");
+        //ballStopper = hardwareMap.servo.get("ball stopper");
 
         // You have to reverse one motor, otherwise a power value of 1.0 would make the motors run
         // in different directions. This just makes it more convenient, so you don't have to use 1.0
         // for one motor and -1.0 for the other motor.
         motorOne.setDirection(DcMotorSimple.Direction.REVERSE);
         motorThree.setDirection(DcMotorSimple.Direction.REVERSE);
-        liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }
 
@@ -147,7 +142,7 @@ public class MainTeleOp extends OpMode {
         // This should now work to have motor one and motor two to work on the left joystick and motor three and four to work on the right joystick
 
 
-        // This will let the robot turn right and left
+        // This will let the robot turn left and right
         if(gamepad1.left_bumper){
             motorOne.setPower(-MOTOR_FULL_POWER);
             motorTwo.setPower(MOTOR_FULL_POWER);
@@ -172,7 +167,7 @@ public class MainTeleOp extends OpMode {
 
         //endregion
 
-        //region center motors
+        //region center motors - this is currently all commented (not in use)
 
         //if(gamepad1.a){
             //centerMotorOne.setPower(MOTOR_FULL_POWER);
@@ -183,42 +178,40 @@ public class MainTeleOp extends OpMode {
             //centerMotorTwo.setPower(MOTOR_POWER_OFF);
         //}
 
-        //endregion
+        //endregion -  -
 
         //region lifting motors
 
         //remember this motor will spin two sets of lifters
 
         double liftPower;
-        if(gamepad1.left_trigger>0.0) {
+        if (gamepad1.left_trigger>0.0 && gamepad1.right_trigger==0.0) {
             liftPower=gamepad1.left_trigger;
+        }
+        else if (gamepad1.right_trigger>0.0 && gamepad1.left_trigger==0.0) {
+            liftPower=-gamepad1.right_trigger;
         }
         else {
             liftPower=MOTOR_POWER_OFF;
         }
         liftMotor.setPower(liftPower);
 
-        // This is another button deidicated to the lift motor (idk if good idea) but yeah its cool
-        //if(gamepad1.left_bumper){
-            //centerMotor.setPower(MOTER_LEAST_POWER);
-        //}
-        //else {
-            //centerMotor.setPower(MOTOR_POWER_OFF);
-        //}
 
 
         //endregion
 
         //region Ball stopping servo
 
-        if(gamepad1.a){
-            ballStopper.setPosition(1.0);
-        }
-        else if(gamepad1.b){
-            ballStopper.setPosition(0.0);
-        }
+        //if(gamepad1.a){
+            //ballStopper.setPosition(1.0);
+        //}
+        //else if(gamepad1.b){
+            //ballStopper.setPosition(0.0);
+        //}
 
         //endregion
+
+        //Gotta write up that code for the shooting mechanism
     }
 
     /*
