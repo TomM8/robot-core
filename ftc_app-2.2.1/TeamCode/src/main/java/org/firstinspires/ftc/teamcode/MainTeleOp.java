@@ -61,7 +61,7 @@ public class MainTeleOp extends OpMode {
     static final double MOTOR_FULL_POWER=1.0;
     static final double MOTOR_LESS_POWER=0.7;
     static final double MOTOR_HALF_POWER=0.5;
-    static final double MOTER_LEAST_POWER=0.3;
+    static final double MOTOR_LEAST_POWER=0.3;
     static final double MOTOR_POWER_OFF=0.0;
 
     // Defining your motors - DcMotor is a class provided by the FTC SDK (software dev kit)
@@ -71,6 +71,7 @@ public class MainTeleOp extends OpMode {
     DcMotor motorFour;
     DcMotor liftMotor;
     Servo ballStopper;
+    DcMotor ballShooter;
 
 
     // Similarly, if you wanted to define a servo, you would put:
@@ -95,7 +96,9 @@ public class MainTeleOp extends OpMode {
         motorThree = hardwareMap.dcMotor.get("motor three");
         motorFour = hardwareMap.dcMotor.get("motor four");
         liftMotor = hardwareMap.dcMotor.get("lift motor");
-        //ballStopper = hardwareMap.servo.get("ball stopper");
+        ballStopper = hardwareMap.servo.get("ball stopper");
+        ballShooter = hardwareMap.dcMotor.get("ball shooter");
+
 
         // You have to reverse one motor, otherwise a power value of 1.0 would make the motors run
         // in different directions. This just makes it more convenient, so you don't have to use 1.0
@@ -201,13 +204,27 @@ public class MainTeleOp extends OpMode {
         //endregion
 
         //region Ball stopping servo
+        if(gamepad2.a){
+            ballStopper.setPosition(0.5);
+        }
+        else {
+            ballStopper.setPosition(1.0);
+        }
 
-        //if(gamepad1.a){
-            //ballStopper.setPosition(1.0);
-        //}
-        //else if(gamepad1.b){
-            //ballStopper.setPosition(0.0);
-        //}
+
+
+        //endregion
+
+        //region Ball shooter
+
+        if(gamepad2.b){
+            ballShooter.setPower(MOTOR_LESS_POWER);
+        }
+        else {
+            ballShooter.setPower(MOTOR_POWER_OFF);
+        }
+
+
 
         //endregion
 
