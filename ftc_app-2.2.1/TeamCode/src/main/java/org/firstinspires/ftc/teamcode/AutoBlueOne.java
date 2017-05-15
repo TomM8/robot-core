@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -52,17 +53,21 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 
-@Autonomous(name="Auto BlueMain", group="Autonomous Red")
-public class AutoBlueMain extends LinearOpMode {
+@Autonomous(name="Auto Blue One", group="Autonomous Red")
+public class AutoBlueOne extends LinearOpMode {
     // orig
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    DcMotor leftMotor;
-    DcMotor rightMotor;
-    ColorSensor colorSensor;
-    DcMotor highMotor;
-    DcMotor centerMotor;
+    //ColorSensor colorSensor;
+    DcMotor motorOne;
+    DcMotor motorTwo;
+    DcMotor motorThree;
+    DcMotor motorFour;
+    DcMotor liftMotor;
+    Servo ballStopper;
+    DcMotor ballShooter;
     static final double DRIVE_POWER = 1.0;
+    static final double SHOOT_POWER = 0.7;
     static final double DRIVE_LESS_POWER = 0.3;
     final double MOVE_TIME = 1.0;
 
@@ -70,24 +75,34 @@ public class AutoBlueMain extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-        leftMotor = hardwareMap.dcMotor.get("left motor");
-        rightMotor = hardwareMap.dcMotor.get("right motor");
-        highMotor = hardwareMap.dcMotor.get("highMotor");
-        colorSensor = hardwareMap.colorSensor.get("colorSensor");
-        centerMotor = hardwareMap.dcMotor.get("center motor");
-        rightMotor.setDirection(DcMotor.Direction.FORWARD);
-        leftMotor.setDirection(DcMotor.Direction.REVERSE);
-        colorSensor.enableLed(false);
+        motorOne = hardwareMap.dcMotor.get("motor one"); // MAP ALL THE HARDWARE
+        motorTwo = hardwareMap.dcMotor.get("motor two"); // HARDWARE ALL THE MAP
+        motorThree = hardwareMap.dcMotor.get("motor three");
+        motorFour = hardwareMap.dcMotor.get("motor four");
+        liftMotor = hardwareMap.dcMotor.get("lift motor");
+        ballStopper = hardwareMap.servo.get("ball stopper");
+        ballShooter = hardwareMap.dcMotor.get("ball shooter");
+        motorOne.setDirection(DcMotor.Direction.FORWARD);
+        motorThree.setDirection(DcMotor.Direction.REVERSE);
+        //colorSensor.enableLed(false);
 
         waitForStart();
 
         // Run the robot
         // action(DRIVE_POWER, time sec)
-        driveF(DRIVE_POWER,1.95);
+        driveF(DRIVE_POWER,1.4);
+        ballStopper.setPosition(0.5);
         waitSec(4);
-        turnRight(DRIVE_POWER,3.05);
-        driveF(DRIVE_POWER,12.0);
-        pushParticles(DRIVE_POWER,10.0);
+        ballStopper.setPosition(1.0);
+        shootBall(SHOOT_POWER,0.5);
+        ballStopper.setPosition(0.5);
+        waitSec(4);
+        ballStopper.setPosition(1.0);
+        shootBall(SHOOT_POWER,0.5);
+        waitSec(2);
+        
+
+
 
         // TODO: press button
 
@@ -105,68 +120,75 @@ public class AutoBlueMain extends LinearOpMode {
          */
 
     public void driveF(double power, double time) {
-        leftMotor.setPower(power);
-        rightMotor.setPower(power);
+        motorThree.setPower(-power);
+        motorFour.setPower(-power);
         waitSec(time);
         stopDriving();
         waitSec(0.3);
     }
 
     public void driveR(double power, double time) {
-        leftMotor.setPower(-power);
-        rightMotor.setPower(-power);
+        motorOne.setPower(power);
+        motorTwo.setPower(power);
         waitSec(time);
         stopDriving();
         waitSec(0.3);
     }
 
     public void turnLeft(double power, double time) {
-        rightMotor.setPower(power);
-        leftMotor.setPower(-power);
+        motorOne.setPower(-power);
+        motorTwo.setPower(power);
+        motorThree.setPower(-power);
+        motorFour.setPower(power);
         waitSec(time);
         stopDriving();
         waitSec(0.3);
 
     }
 
-    public void turnLeftArc(double time) {
-        rightMotor.setPower(1.0);
-        leftMotor.setPower(0.2);
-        waitSec(time);
-        stopDriving();
-    }
+    //public void turnLeftArc(double time) {
+        //rightMotor.setPower(1.0);
+        //leftMotor.setPower(0.2);
+        //waitSec(time);
+        //stopDriving();
+    //}
 
     public void turnRight(double power, double time) {
-        rightMotor.setPower(-power);
-        leftMotor.setPower(power);
+        motorOne.setPower(power);
+        motorTwo.setPower(-power);
+        motorThree.setPower(power);
+        motorFour.setPower(-power);
         waitSec(time);
         stopDriving();
         waitSec(0.3);
     }
 
     public void stopDriving() {
-        leftMotor.setPower(0.0);
-        rightMotor.setPower(0.0);
+        motorOne.setPower(0.0);
+        motorTwo.setPower(0.0);
+        motorThree.setPower(0.0);
+        motorFour.setPower(0.0);
     }
 
-    public void extendArm(double power, double time) {
-        highMotor.setPower(-0.5);
-        waitSec(time);
-        highMotor.setPower(0.0);
-    }
-
-    public void shortenArm(double power, double time) {
-        highMotor.setPower(0.5);
-        waitSec(time);
-        highMotor.setPower(0.0);
-    }
-
-    public void pushParticles(double power, double time) {
-        waitSec(15.0);
-        while(leftMotor.getPower()>0.0 && rightMotor.getPower()>0.0) {
-            centerMotor.setPower(1.0);
+    public void shootBall(double power, double time) {
+        while(ballStopper.setPosition()==1.0 && motorOne.setPower()==0.0 && motorThree.setPower()==0.0) {
+            ballShooter.setPower(power)
+            waitSec(time);
         }
     }
+
+    public void stopBall(double power, double time) {
+        ballStopper.setPosition(0.5);
+        waitSec(0.5);
+        ballStopper.setPosition(1.0);
+    }
+
+    //public void pushParticles(double power, double time) {
+        //waitSec(15.0);
+        //while(leftMotor.getPower()>0.0 && rightMotor.getPower()>0.0) {
+            //centerMotor.setPower(1.0);
+        //}
+    //}
 
     public void waitSec(double length) {
         runtime.reset();

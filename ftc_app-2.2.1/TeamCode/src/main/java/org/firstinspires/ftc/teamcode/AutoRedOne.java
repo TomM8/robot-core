@@ -36,7 +36,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -53,12 +52,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 
-@Autonomous(name="Auto BlueMainF", group="Autonomous Red")
-public class AutoRedMain extends LinearOpMode {
+@Autonomous(name="Auto Red One", group="Autonomous Red")
+public class AutoRedOne extends LinearOpMode {
     // orig
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    //ColorSensor colorSensor;
     DcMotor motorOne;
     DcMotor motorTwo;
     DcMotor motorThree;
@@ -75,16 +73,14 @@ public class AutoRedMain extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-        motorOne = hardwareMap.dcMotor.get("motor one"); // MAP ALL THE HARDWARE
-        motorTwo = hardwareMap.dcMotor.get("motor two"); // HARDWARE ALL THE MAP
-        motorThree = hardwareMap.dcMotor.get("motor three");
-        motorFour = hardwareMap.dcMotor.get("motor four");
-        liftMotor = hardwareMap.dcMotor.get("lift motor");
-        ballStopper = hardwareMap.servo.get("ball stopper");
-        ballShooter = hardwareMap.dcMotor.get("ball shooter");
-        motorOne.setDirection(DcMotor.Direction.FORWARD);
-        motorThree.setDirection(DcMotor.Direction.REVERSE);
-        //colorSensor.enableLed(false);
+        leftMotor = hardwareMap.dcMotor.get("left motor");
+        rightMotor = hardwareMap.dcMotor.get("right motor");
+        highMotor = hardwareMap.dcMotor.get("highMotor");
+        colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        centerMotor = hardwareMap.dcMotor.get("center motor");
+        rightMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftMotor.setDirection(DcMotor.Direction.REVERSE);
+        colorSensor.enableLed(false);
 
         waitForStart();
 
@@ -100,7 +96,7 @@ public class AutoRedMain extends LinearOpMode {
         ballStopper.setPosition(1.0);
         shootBall(SHOOT_POWER,0.5);
         waitSec(2);
-        
+
 
 
 
@@ -147,10 +143,10 @@ public class AutoRedMain extends LinearOpMode {
     }
 
     //public void turnLeftArc(double time) {
-        //rightMotor.setPower(1.0);
-        //leftMotor.setPower(0.2);
-        //waitSec(time);
-        //stopDriving();
+    //rightMotor.setPower(1.0);
+    //leftMotor.setPower(0.2);
+    //waitSec(time);
+    //stopDriving();
     //}
 
     public void turnRight(double power, double time) {
@@ -171,8 +167,10 @@ public class AutoRedMain extends LinearOpMode {
     }
 
     public void shootBall(double power, double time) {
-        ballShooter.setPower(0.7);
-        waitSec(time);
+        while(ballStopper.setPosition()==1.0 && motorOne.setPower()==0.0 && motorThree.setPower()==0.0) {
+            ballShooter.setPower(power)
+            waitSec(time);
+        }
     }
 
     public void stopBall(double power, double time) {
@@ -182,10 +180,10 @@ public class AutoRedMain extends LinearOpMode {
     }
 
     //public void pushParticles(double power, double time) {
-        //waitSec(15.0);
-        //while(leftMotor.getPower()>0.0 && rightMotor.getPower()>0.0) {
-            //centerMotor.setPower(1.0);
-        //}
+    //waitSec(15.0);
+    //while(leftMotor.getPower()>0.0 && rightMotor.getPower()>0.0) {
+    //centerMotor.setPower(1.0);
+    //}
     //}
 
     public void waitSec(double length) {
