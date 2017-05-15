@@ -204,7 +204,7 @@ public class MainTeleOp extends OpMode {
         //endregion
 
         //region Ball stopping servo
-        if(gamepad2.a){
+        if(gamepad1.a){
             ballStopper.setPosition(0.5);
         }
         else {
@@ -217,7 +217,7 @@ public class MainTeleOp extends OpMode {
 
         //region Ball shooter
 
-        if(gamepad2.b){
+        if(gamepad1.b){
             ballShooter.setPower(MOTOR_LESS_POWER);
         }
         else {
