@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -73,14 +74,16 @@ public class AutoRedOne extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-        leftMotor = hardwareMap.dcMotor.get("left motor");
-        rightMotor = hardwareMap.dcMotor.get("right motor");
-        highMotor = hardwareMap.dcMotor.get("highMotor");
-        colorSensor = hardwareMap.colorSensor.get("colorSensor");
-        centerMotor = hardwareMap.dcMotor.get("center motor");
-        rightMotor.setDirection(DcMotor.Direction.FORWARD);
-        leftMotor.setDirection(DcMotor.Direction.REVERSE);
-        colorSensor.enableLed(false);
+        motorOne = hardwareMap.dcMotor.get("motor one"); // MAP ALL THE HARDWARE
+        motorTwo = hardwareMap.dcMotor.get("motor two"); // HARDWARE ALL THE MAP
+        motorThree = hardwareMap.dcMotor.get("motor three");
+        motorFour = hardwareMap.dcMotor.get("motor four");
+        liftMotor = hardwareMap.dcMotor.get("lift motor");
+        ballStopper = hardwareMap.servo.get("ball stopper");
+        ballShooter = hardwareMap.dcMotor.get("ball shooter");
+        motorOne.setDirection(DcMotor.Direction.FORWARD);
+        motorThree.setDirection(DcMotor.Direction.REVERSE);
+        //colorSensor.enableLed(false);
 
         waitForStart();
 
@@ -167,9 +170,9 @@ public class AutoRedOne extends LinearOpMode {
     }
 
     public void shootBall(double power, double time) {
-        while(ballStopper.setPosition()==1.0 && motorOne.setPower()==0.0 && motorThree.setPower()==0.0) {
-            ballShooter.setPower(power)
-            waitSec(time);
+        while(ballStopper.getPosition()==1.0 && motorOne.getPower()==0.0 && motorThree.getPower()==0.0) {
+            ballShooter.setPower(power);
+            waitSec(2);
         }
     }
 

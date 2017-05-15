@@ -171,9 +171,9 @@ public class AutoBlueOne extends LinearOpMode {
     }
 
     public void shootBall(double power, double time) {
-        while(ballStopper.setPosition()==1.0 && motorOne.setPower()==0.0 && motorThree.setPower()==0.0) {
-            ballShooter.setPower(power)
-            waitSec(time);
+        while(ballStopper.getPosition()==1.0 && motorOne.getPower()==0.0 && motorThree.getPower()==0.0) {
+            ballShooter.setPower(power);
+            waitSec(2);
         }
     }
 
