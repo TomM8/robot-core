@@ -147,16 +147,16 @@ public class MainTeleOp extends OpMode {
 
         // This will let the robot turn left and right
         if(gamepad1.left_bumper){
-            motorOne.setPower(-MOTOR_FULL_POWER);
-            motorTwo.setPower(MOTOR_FULL_POWER);
-            motorThree.setPower(-MOTOR_FULL_POWER);
-            motorFour.setPower(MOTOR_FULL_POWER);
+            motorOne.setPower(-MOTOR_HALF_POWER);
+            motorTwo.setPower(MOTOR_HALF_POWER);
+            motorThree.setPower(-MOTOR_HALF_POWER);
+            motorFour.setPower(MOTOR_HALF_POWER);
         }
         else if(gamepad1.right_bumper) {
-            motorOne.setPower(MOTOR_FULL_POWER);
-            motorTwo.setPower(-MOTOR_FULL_POWER);
-            motorThree.setPower(MOTOR_FULL_POWER);
-            motorFour.setPower(-MOTOR_FULL_POWER);
+            motorOne.setPower(MOTOR_HALF_POWER);
+            motorTwo.setPower(-MOTOR_HALF_POWER);
+            motorThree.setPower(MOTOR_HALF_POWER);
+            motorFour.setPower(-MOTOR_HALF_POWER);
         }
         else{
             motorOne.setPower(joystickToMotorValue(gamepad1.left_stick_y)); // This sets power
