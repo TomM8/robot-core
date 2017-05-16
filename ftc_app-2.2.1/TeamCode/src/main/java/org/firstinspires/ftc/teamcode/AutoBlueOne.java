@@ -69,6 +69,7 @@ public class AutoBlueOne extends LinearOpMode {
     static final double DRIVE_POWER = 1.0;
     static final double SHOOT_POWER = 0.7;
     static final double DRIVE_LESS_POWER = 0.3;
+    static final double NO_SHOOT_POWER = 0.0;
     final double MOVE_TIME = 1.0;
 
     @Override
@@ -90,16 +91,24 @@ public class AutoBlueOne extends LinearOpMode {
 
         // Run the robot
         // action(DRIVE_POWER, time sec)
-        driveF(DRIVE_POWER,1.4);
         ballStopper.setPosition(0.5);
-        waitSec(4);
+        driveF(DRIVE_POWER,1.2);
         ballStopper.setPosition(1.0);
-        shootBall(SHOOT_POWER,0.5);
+        waitSec(1.0);
+        shootBall(SHOOT_POWER,0.7);
+        waitSec(0.7);
+        shootBall(NO_SHOOT_POWER,0.0);
         ballStopper.setPosition(0.5);
-        waitSec(4);
+        waitSec(1.5);
         ballStopper.setPosition(1.0);
-        shootBall(SHOOT_POWER,0.5);
+        waitSec(1.0);
+        shootBall(SHOOT_POWER,0.7);
+        waitSec(0.7);
+        shootBall(NO_SHOOT_POWER,0.0);
         waitSec(2);
+        driveF(DRIVE_POWER,1.5);
+        waitSec(0.1);
+        driveF(DRIVE_POWER,0.2);
         
 
 
@@ -171,10 +180,13 @@ public class AutoBlueOne extends LinearOpMode {
     }
 
     public void shootBall(double power, double time) {
-        while(ballStopper.getPosition()==1.0 && motorOne.getPower()==0.0 && motorThree.getPower()==0.0) {
+        if(ballStopper.getPosition()>0.5){
             ballShooter.setPower(power);
-            waitSec(2);
         }
+        else {
+            ballShooter.setPower(0.0);
+        }
+
     }
 
     public void stopBall(double power, double time) {

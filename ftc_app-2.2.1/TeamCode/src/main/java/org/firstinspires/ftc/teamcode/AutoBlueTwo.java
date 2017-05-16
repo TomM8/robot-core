@@ -34,7 +34,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -53,11 +52,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 
-@Autonomous(name="Auto Red One", group="Autonomous Red")
-public class AutoRedOne extends LinearOpMode {
+@Autonomous(name="Auto Blue Two", group="Autonomous Red")
+public class AutoBlueTwo extends LinearOpMode {
     // orig
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
+    //ColorSensor colorSensor;
     DcMotor motorOne;
     DcMotor motorTwo;
     DcMotor motorThree;
@@ -91,7 +91,8 @@ public class AutoRedOne extends LinearOpMode {
         // Run the robot
         // action(DRIVE_POWER, time sec)
         ballStopper.setPosition(0.5);
-        driveF(DRIVE_POWER,1.2);
+        driveF(DRIVE_POWER,1.0);
+        driveRI(DRIVE_POWER,1.1);
         ballStopper.setPosition(1.0);
         waitSec(1.0);
         shootBall(SHOOT_POWER,0.7);
@@ -105,10 +106,10 @@ public class AutoRedOne extends LinearOpMode {
         waitSec(0.7);
         shootBall(NO_SHOOT_POWER,0.0);
         waitSec(2);
-        driveF(DRIVE_POWER,1.5);
+        driveF(DRIVE_POWER,1.4);
         waitSec(0.1);
         driveF(DRIVE_POWER,0.2);
-
+        
 
 
 
@@ -136,8 +137,22 @@ public class AutoRedOne extends LinearOpMode {
     }
 
     public void driveR(double power, double time) {
+        motorThree.setPower(power);
+        motorFour.setPower(power);
+        waitSec(time);
+        stopDriving();
+        waitSec(0.3);
+    }
+    public void driveL(double power, double time) {
         motorOne.setPower(power);
         motorTwo.setPower(power);
+        waitSec(time);
+        stopDriving();
+        waitSec(0.3);
+    }
+    public void driveRI(double power, double time) {
+        motorOne.setPower(power);
+        motorTwo.setPower(-power);
         waitSec(time);
         stopDriving();
         waitSec(0.3);
@@ -155,10 +170,10 @@ public class AutoRedOne extends LinearOpMode {
     }
 
     //public void turnLeftArc(double time) {
-    //rightMotor.setPower(1.0);
-    //leftMotor.setPower(0.2);
-    //waitSec(time);
-    //stopDriving();
+        //rightMotor.setPower(1.0);
+        //leftMotor.setPower(0.2);
+        //waitSec(time);
+        //stopDriving();
     //}
 
     public void turnRight(double power, double time) {
@@ -195,10 +210,10 @@ public class AutoRedOne extends LinearOpMode {
     }
 
     //public void pushParticles(double power, double time) {
-    //waitSec(15.0);
-    //while(leftMotor.getPower()>0.0 && rightMotor.getPower()>0.0) {
-    //centerMotor.setPower(1.0);
-    //}
+        //waitSec(15.0);
+        //while(leftMotor.getPower()>0.0 && rightMotor.getPower()>0.0) {
+            //centerMotor.setPower(1.0);
+        //}
     //}
 
     public void waitSec(double length) {
