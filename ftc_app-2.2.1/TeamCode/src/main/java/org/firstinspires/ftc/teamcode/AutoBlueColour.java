@@ -34,10 +34,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -53,9 +53,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 
-@Autonomous(name="AutonomousColorTest", group="Component Tests")
-public class AutonomousUniversalColorTest extends LinearOpMode {
-
+@Autonomous(name="Auto Blue Colour", group="Autonomous Red")
+public class AutoBlueColour extends LinearOpMode {
+    // orig
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
     ColorSensor colorSensor;
@@ -83,7 +83,6 @@ public class AutonomousUniversalColorTest extends LinearOpMode {
         liftMotor = hardwareMap.dcMotor.get("lift motor");
         ballStopper = hardwareMap.servo.get("ball stopper");
         ballShooter = hardwareMap.dcMotor.get("ball shooter");
-        colorSensor = hardwareMap.colorSensor.get("color sensor");
         motorOne.setDirection(DcMotor.Direction.FORWARD);
         motorThree.setDirection(DcMotor.Direction.REVERSE);
         colorSensor.enableLed(false);
@@ -92,30 +91,55 @@ public class AutonomousUniversalColorTest extends LinearOpMode {
 
         // Run the robot
         // action(DRIVE_POWER, time sec)
-        //TODO: This driveF value is prob. not right and the same goes for the colour sensor --> It is theoretica
+        ballStopper.setPosition(0.5);
+        driveF(DRIVE_POWER,1.2);
+        ballStopper.setPosition(1.0);
+        waitSec(1.0);
+        shootBall(SHOOT_POWER,0.7);
+        waitSec(0.7);
+        shootBall(NO_SHOOT_POWER,0.0);
+        ballStopper.setPosition(0.5);
+        waitSec(1.5);
+        ballStopper.setPosition(1.0);
+        waitSec(1.0);
+        shootBall(SHOOT_POWER,0.7);
+        waitSec(0.7);
+        shootBall(NO_SHOOT_POWER,0.0);
+        waitSec(2);
+        driveF(DRIVE_POWER,1.5);
+        waitSec(0.1);
+        driveF(DRIVE_POWER,0.2);
+        waitSec(0.2);
+        driveRI(DRIVE_POWER,2.0);
+        waitSec(0.1);
+        driveF(DRIVE_LESS_POWER,0.8); //TODO: This driveF value is prob. not right and the same goes for the colour sensor --> It is theoretica
         if (colorSensor.blue() > colorSensor.red()) {
-            ballStopper.setPosition(0.5);
+            driveRI(DRIVE_POWER, 0.5);
+            waitSec(0.1);
+            driveR(DRIVE_POWER, 0.3);
         }
         else {
-            liftMotor.setPower(1.0);
+            driveF(DRIVE_LESS_POWER,0.2);
+            waitSec(0.1);
+            driveRI(DRIVE_POWER,0.5);
         }
 
-        // TODO: I might have to do this to the colour sensor in order for this to work:
+       // TODO: I might have to do this to the colour sensor in order for this to work:
         //highMotor.setPower(1);
         //while (runtime.seconds() < MOVE_TIME) ;
         //highMotor.setPower(0);
         //else {
-        //double tracker = System.currentTimeMillis()+10000;
-        //while (System.currentTimeMillis() < tracker) {
-        //centerMotor.setPower(1.0);
-        //}
+            //double tracker = System.currentTimeMillis()+10000;
+            //while (System.currentTimeMillis() < tracker) {
+                //centerMotor.setPower(1.0);
+            //}
 
-    }
+        }
+        
 
 
 
-
-    // TODO: press button
+        // TODO: press button
 
 
         /*
@@ -172,10 +196,10 @@ public class AutonomousUniversalColorTest extends LinearOpMode {
     }
 
     //public void turnLeftArc(double time) {
-    //rightMotor.setPower(1.0);
-    //leftMotor.setPower(0.2);
-    //waitSec(time);
-    //stopDriving();
+        //rightMotor.setPower(1.0);
+        //leftMotor.setPower(0.2);
+        //waitSec(time);
+        //stopDriving();
     //}
 
     public void turnRight(double power, double time) {
@@ -212,10 +236,10 @@ public class AutonomousUniversalColorTest extends LinearOpMode {
     }
 
     //public void pushParticles(double power, double time) {
-    //waitSec(15.0);
-    //while(leftMotor.getPower()>0.0 && rightMotor.getPower()>0.0) {
-    //centerMotor.setPower(1.0);
-    //}
+        //waitSec(15.0);
+        //while(leftMotor.getPower()>0.0 && rightMotor.getPower()>0.0) {
+            //centerMotor.setPower(1.0);
+        //}
     //}
 
     public void waitSec(double length) {
