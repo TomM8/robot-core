@@ -92,7 +92,7 @@ public class AutoBlueOne extends LinearOpMode {
         // Run the robot
         // action(DRIVE_POWER, time sec)
         ballStopper.setPosition(0.5);
-        driveF(DRIVE_POWER,1.2);
+        driveF(DRIVE_POWER,0.8);
         ballStopper.setPosition(1.0);
         waitSec(1.0);
         shootBall(SHOOT_POWER,0.7);
