@@ -90,9 +90,10 @@ public class AutoRedOne extends LinearOpMode {
 
         // Run the robot
         // action(DRIVE_POWER, time sec)
-        ballStopper.setPosition(0.5);
-        driveF(DRIVE_POWER,0.8);
+        waitSec(5);
         ballStopper.setPosition(1.0);
+        waitSec(0.2);
+        driveF(DRIVE_POWER,0.8);
         waitSec(1.0);
         shootBall(SHOOT_POWER,0.7);
         waitSec(0.7);
@@ -108,6 +109,12 @@ public class AutoRedOne extends LinearOpMode {
         driveF(DRIVE_POWER,1.5);
         waitSec(0.1);
         driveF(DRIVE_POWER,0.2);
+        waitSec(0.2);
+        driveRI(DRIVE_POWER,0.6);
+        waitSec(0.2);
+        driveF(DRIVE_POWER,0.4);
+        waitSec(0.1);
+        driveDL(DRIVE_POWER,1.0);
 
 
 
@@ -134,6 +141,25 @@ public class AutoRedOne extends LinearOpMode {
         stopDriving();
         waitSec(0.3);
     }
+
+    public void driveDL(double power, double time) {
+        motorOne.setPower(-power);
+        motorTwo.setPower(power);
+        motorThree.setPower(-power);
+        motorFour.setPower(-power);
+        waitSec(time);
+        stopDriving();
+        waitSec(0.3);
+    }
+
+    public void driveRI(double power, double time) {
+        motorOne.setPower(power);
+        motorTwo.setPower(-power);
+        waitSec(time);
+        stopDriving();
+        waitSec(0.3);
+    }
+
 
     public void driveR(double power, double time) {
         motorOne.setPower(power);
