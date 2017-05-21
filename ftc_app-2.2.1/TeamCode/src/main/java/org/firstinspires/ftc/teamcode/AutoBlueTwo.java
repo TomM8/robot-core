@@ -105,13 +105,13 @@ public class AutoBlueTwo extends LinearOpMode {
         shootBall(SHOOT_POWER,0.7);
         waitSec(0.7);
         shootBall(NO_SHOOT_POWER,0.0);
-        //waitSec(2);
-        //driveL(DRIVE_POWER,0.6);
-        //waitSec(0.2);
-        //driveF(DRIVE_POWER,0.4);
-        //waitSec(0.1);
-        //driveDR(DRIVE_POWER,1.0);
-        //driveF(DRIVE_POWER,1.0);
+        waitSec(2);
+        driveL(DRIVE_POWER,0.6);
+        waitSec(0.2);
+        driveF(DRIVE_POWER,0.6);
+        waitSec(0.1);
+        driveDR(DRIVE_POWER,1.0);
+        driveF(DRIVE_POWER,1.0);
 
         // TODO: press button
 

@@ -92,7 +92,7 @@ public class AutoRedTwo extends LinearOpMode {
         // action(DRIVE_POWER, time sec)
         waitSec(5);
         ballStopper.setPosition(1.0);
-        driveF(DRIVE_POWER,0.7);
+        driveF(DRIVE_POWER,0.9);
         driveL(DRIVE_POWER,0.9);
         waitSec(1.0);
         shootBall(SHOOT_POWER,0.7);
@@ -108,9 +108,9 @@ public class AutoRedTwo extends LinearOpMode {
         waitSec(2);
         driveRI(DRIVE_POWER,0.6);
         waitSec(0.2);
-        driveF(DRIVE_POWER,0.4);
+        driveF(DRIVE_POWER,0.6);
         waitSec(0.1);
-        driveDL(DRIVE_POWER,1.0);
+        driveDL(DRIVE_POWER,1.3);
 
         //driveDL(DRIVE_POWER,1.5);
         //turnLeft(DRIVE_POWER,1.5);
